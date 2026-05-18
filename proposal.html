@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Draft Proposal - Heydie Zuliansyah</title>
+  <style>
+    @page { margin: 2.5cm; }
+    body {
+      font-family: "Times New Roman", Times, serif;
+      font-size: 12pt;
+      line-height: 1.8;
+      color: #000;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .cover {
+      text-align: center;
+      page-break-after: always;
+      padding-top: 60px;
+    }
+    .cover h1 { font-size: 16pt; text-transform: uppercase; margin-bottom: 10px; }
+    .cover h2 { font-size: 13pt; font-weight: normal; margin-bottom: 40px; }
+    .cover .title-box {
+      border: 2px solid #000;
+      padding: 20px 30px;
+      margin: 30px auto;
+      max-width: 600px;
+      font-size: 14pt;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    .cover .identity { margin-top: 60px; font-size: 12pt; }
+    .cover .identity p { margin: 4px 0; }
+    .cover .logo { margin: 20px 0; font-size: 48pt; }
+    h1.bab {
+      font-size: 13pt;
+      text-align: center;
+      text-transform: uppercase;
+      margin-top: 40px;
+      margin-bottom: 20px;
+    }
+    h2.sub {
+      font-size: 12pt;
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+    h3.subsub {
+      font-size: 12pt;
+      font-weight: bold;
+      margin-top: 16px;
+      margin-bottom: 6px;
+    }
+    p { text-align: justify; margin: 8px 0; text-indent: 40px; }
+    p.no-indent { text-indent: 0; }
+    ol, ul { margin: 8px 0 8px 40px; }
+    li { margin-bottom: 4px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 11pt;
+    }
+    th, td {
+      border: 1px solid #000;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th { background: #f0f0f0; font-weight: bold; text-align: center; }
+    .page-break { page-break-before: always; }
+    .center { text-align: center; }
+    .figure-caption { text-align: center; font-style: italic; margin-top: 4px; font-size: 11pt; }
+    .code-block {
+      background: #f5f5f5;
+      border: 1px solid #ccc;
+      padding: 10px 16px;
+      font-family: "Courier New", monospace;
+      font-size: 10pt;
+      margin: 10px 0 10px 40px;
+      white-space: pre;
+    }
+    .divider { border: none; border-top: 1px solid #000; margin: 30px 0; }
+  </style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover">
+  <h1>Draft Proposal Penelitian</h1>
+  <div class="title-box">
+    Sistem Pengenalan Wajah Real-Time Menggunakan Algoritma K-Nearest Neighbor (KNN) dan Haar Cascade Classifier Berbasis Python
+  </div>
+  <br>
+  <p class="no-indent center">Disusun oleh:</p>
+  <div class="identity">
+    <p><strong>Nama &nbsp;&nbsp;&nbsp;: Heydie Zuliansyah</strong></p>
+    <p><strong>NIM &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: 223250047</strong></p>
+  </div>
+  <br><br>
+  <p class="no-indent center">2026</p>
+</div>
+
+<!-- BAB 1 -->
+<div class="page-break">
+<h1 class="bab">BAB 1<br>PENDAHULUAN</h1>
+
+<h2 class="sub">1.1 Latar Belakang</h2>
+<p>
+  Teknologi pengenalan wajah (<em>face recognition</em>) merupakan salah satu cabang computer vision yang berkembang pesat dalam beberapa tahun terakhir. Sistem pengenalan wajah secara real-time telah banyak diaplikasikan dalam berbagai bidang, mulai dari sistem keamanan dan pengawasan, sistem absensi karyawan, autentikasi perangkat elektronik, hingga identifikasi individu dalam kerumunan.
+</p>
+<p>
+  Kemajuan library open-source seperti OpenCV (<em>Open Source Computer Vision Library</em>) telah mempermudah pengembang dan peneliti untuk mengimplementasikan sistem pengenalan wajah secara efisien tanpa memerlukan perangkat keras yang mahal. OpenCV menyediakan berbagai algoritma deteksi objek, termasuk Haar Cascade Classifier yang merupakan metode klasik namun handal untuk mendeteksi wajah secara real-time dari umpan video kamera.
+</p>
+<p>
+  Setelah wajah berhasil dideteksi, diperlukan algoritma klasifikasi untuk mengenali identitas wajah tersebut. Salah satu algoritma yang sederhana namun efektif adalah K-Nearest Neighbor (KNN), yaitu algoritma berbasis jarak yang mengklasifikasikan data baru berdasarkan kedekatan jarak dengan data latih yang telah diketahui labelnya.
+</p>
+<p>
+  Penelitian ini bertujuan membangun sistem pengenalan wajah real-time menggunakan bahasa pemrograman Python yang mengintegrasikan Haar Cascade Classifier untuk tahap deteksi wajah dan algoritma KNN yang diimplementasikan secara langsung (<em>from scratch</em>) menggunakan NumPy untuk tahap pengenalan. Sistem ini mencakup pipeline lengkap mulai dari pengambilan data wajah, penyimpanan dataset, hingga pengenalan wajah secara real-time melalui kamera webcam.
+</p>
+
+<h2 class="sub">1.2 Rumusan Masalah</h2>
+<p class="no-indent">Berdasarkan latar belakang yang telah dipaparkan, rumusan masalah dalam penelitian ini adalah:</p>
+<ol>
+  <li>Bagaimana membangun sistem deteksi wajah secara real-time menggunakan Haar Cascade Classifier dan OpenCV?</li>
+  <li>Bagaimana mengimplementasikan algoritma K-Nearest Neighbor (KNN) dari scratch untuk pengenalan wajah berdasarkan dataset yang telah dikumpulkan?</li>
+  <li>Bagaimana merancang pipeline lengkap sistem pengenalan wajah mulai dari pengumpulan data hingga identifikasi secara real-time?</li>
+  <li>Bagaimana performa sistem pengenalan wajah yang dibangun dalam mengenali identitas individu secara real-time?</li>
+</ol>
+
+<h2 class="sub">1.3 Batasan Masalah</h2>
+<p class="no-indent">Agar penelitian lebih terarah, batasan masalah yang ditetapkan adalah sebagai berikut:</p>
+<ol>
+  <li>Sistem hanya mendeteksi wajah yang menghadap ke depan (<em>frontal face</em>) menggunakan model Haar Cascade <em>haarcascade_frontalface_alt.xml</em>.</li>
+  <li>Pengambilan data wajah dilakukan menggunakan kamera webcam standar pada komputer.</li>
+  <li>Setiap individu dikumpulkan sebanyak 100 sampel citra wajah berukuran 100x100 piksel.</li>
+  <li>Algoritma pengenalan yang digunakan adalah KNN dengan nilai k=5 yang diimplementasikan menggunakan NumPy berdasarkan jarak Euclidean.</li>
+  <li>Sistem diuji dalam kondisi pencahayaan dalam ruangan (<em>indoor</em>).</li>
+  <li>Sistem dibangun menggunakan bahasa pemrograman Python 3.11 dengan library OpenCV dan NumPy.</li>
+  <li>Dataset wajah disimpan dalam format file <em>.npy</em> (NumPy binary format).</li>
+</ol>
+
+<h2 class="sub">1.4 Tujuan dan Manfaat</h2>
+
+<h3 class="subsub">1.4.1 Tujuan Penelitian</h3>
+<ol>
+  <li>Membangun sistem deteksi wajah real-time menggunakan Haar Cascade Classifier berbasis OpenCV.</li>
+  <li>Mengimplementasikan pipeline pengumpulan dataset wajah secara otomatis dari kamera webcam.</li>
+  <li>Mengimplementasikan algoritma KNN dari scratch menggunakan NumPy untuk pengenalan wajah.</li>
+  <li>Membangun sistem pengenalan wajah real-time yang mampu mengidentifikasi beberapa individu sekaligus.</li>
+</ol>
+
+<h3 class="subsub">1.4.2 Manfaat Penelitian</h3>
+<ol>
+  <li><strong>Manfaat Teoritis:</strong> Memberikan pemahaman praktis tentang implementasi algoritma computer vision dan machine learning dalam pengenalan wajah, serta menjadi referensi bagi penelitian lebih lanjut.</li>
+  <li><strong>Manfaat Praktis:</strong> Sistem yang dihasilkan dapat dikembangkan lebih lanjut untuk aplikasi nyata seperti sistem absensi otomatis, kontrol akses berbasis wajah, atau sistem keamanan sederhana.</li>
+  <li><strong>Manfaat Akademis:</strong> Penelitian ini dapat menjadi bahan pembelajaran bagi mahasiswa yang ingin memulai di bidang computer vision dan machine learning.</li>
+</ol>
+</div>
+
+<!-- BAB 2 -->
+<div class="page-break">
+<h1 class="bab">BAB 2<br>TINJAUAN PUSTAKA</h1>
+
+<h2 class="sub">2.1 Penelitian Terkait</h2>
+
+<p>
+  Viola dan Jones (2001) memperkenalkan metode deteksi wajah real-time berbasis Haar-like features yang menjadi dasar dari Haar Cascade Classifier. Metode ini menggunakan integral image dan AdaBoost untuk mencapai kecepatan deteksi yang tinggi dengan akurasi memadai, sehingga hingga saat ini masih banyak digunakan dalam aplikasi real-time.
+</p>
+<p>
+  Turk dan Pentland (1991) mengajukan pendekatan Eigenface untuk pengenalan wajah berbasis PCA (Principal Component Analysis), yang menjadi salah satu referensi awal dalam bidang face recognition. Pendekatan tersebut mengekstrak fitur wajah dalam ruang dimensi yang lebih rendah untuk mempercepat komputasi.
+</p>
+<p>
+  Cover dan Hart (1967) memperkenalkan algoritma K-Nearest Neighbor (KNN) sebagai metode klasifikasi non-parametrik yang bekerja berdasarkan kedekatan jarak antar data. KNN telah terbukti efektif untuk berbagai masalah klasifikasi termasuk pengenalan pola wajah pada dataset berukuran sedang.
+</p>
+<p>
+  Bradski (2000) mengembangkan OpenCV sebagai library open-source untuk computer vision yang mendukung berbagai platform dan bahasa pemrograman. OpenCV menyediakan implementasi Haar Cascade Classifier yang siap digunakan, termasuk model pre-trained untuk deteksi wajah frontal.
+</p>
+<p>
+  Penelitian oleh Hidayat dkk. (2020) menunjukkan bahwa kombinasi Haar Cascade dan KNN dapat digunakan untuk sistem absensi berbasis pengenalan wajah dengan akurasi mencapai 85-92% pada kondisi pencahayaan yang terkontrol, menggunakan dataset 5-10 orang dengan 50-100 sampel per orang.
+</p>
+
+<h2 class="sub">2.2 Teori-Teori yang Digunakan</h2>
+
+<h3 class="subsub">2.2.1 OpenCV (Open Source Computer Vision Library)</h3>
+<p>
+  OpenCV adalah library open-source yang dikembangkan oleh Intel dan kini dikelola oleh komunitas open-source. Library ini menyediakan lebih dari 2.500 algoritma computer vision dan machine learning yang dioptimalkan. Dalam penelitian ini, OpenCV digunakan untuk:
+</p>
+<ul>
+  <li>Menangkap video dari kamera webcam melalui objek <code>cv2.VideoCapture</code></li>
+  <li>Mengkonversi citra dari warna (BGR) ke grayscale menggunakan <code>cv2.cvtColor</code></li>
+  <li>Mendeteksi wajah menggunakan <code>cv2.CascadeClassifier.detectMultiScale</code></li>
+  <li>Menampilkan citra dan anotasi bounding box pada frame video</li>
+</ul>
+
+<h3 class="subsub">2.2.2 Haar Cascade Classifier</h3>
+<p>
+  Haar Cascade Classifier adalah metode deteksi objek yang diperkenalkan oleh Viola dan Jones. Metode ini menggunakan fitur Haar-like (pola hitam-putih pada area citra) yang dihitung secara cepat menggunakan integral image. Proses pelatihan menggunakan algoritma AdaBoost untuk memilih fitur-fitur terpenting dari ribuan fitur kandidat, kemudian disusun dalam struktur cascade untuk mempercepat proses deteksi dengan menolak wilayah non-wajah sejak dini.
+</p>
+<p>
+  Dalam penelitian ini digunakan model <em>haarcascade_frontalface_alt.xml</em> yang merupakan model pre-trained dari OpenCV untuk mendeteksi wajah frontal. Fungsi <code>detectMultiScale</code> dengan parameter <em>scaleFactor=1.3</em> dan <em>minNeighbors=5</em> digunakan untuk mendeteksi wajah pada berbagai skala dalam satu frame.
+</p>
+
+<h3 class="subsub">2.2.3 K-Nearest Neighbor (KNN)</h3>
+<p>
+  K-Nearest Neighbor adalah algoritma klasifikasi berbasis instansi yang menyimpan seluruh data latih dan mengklasifikasikan data baru berdasarkan mayoritas kelas dari k tetangga terdekat. Jarak antar data dihitung menggunakan jarak Euclidean:
+</p>
+<div class="code-block">d(v1, v2) = sqrt(sum((v1 - v2)^2))</div>
+<p>
+  Dalam implementasi penelitian ini, setiap citra wajah berukuran 100x100x3 piksel di-flatten menjadi vektor berdimensi 30.000, kemudian dihitung jaraknya terhadap semua data latih. Nilai k=5 digunakan untuk menentukan 5 tetangga terdekat, dan kelas yang paling sering muncul di antara 5 tetangga tersebut menjadi hasil prediksi identitas wajah.
+</p>
+
+<h3 class="subsub">2.2.4 NumPy</h3>
+<p>
+  NumPy adalah library Python untuk komputasi numerik berbasis array multidimensi yang dioptimalkan. Dalam penelitian ini, NumPy digunakan untuk menyimpan dan memuat dataset wajah dalam format binary (<em>.npy</em>), serta melakukan operasi vektor pada implementasi algoritma KNN seperti operasi pengurangan vektor, pemangkatan, penjumlahan, dan pengakaran.
+</p>
+
+<h3 class="subsub">2.2.5 Pipeline Sistem Pengenalan Wajah</h3>
+<p>
+  Pipeline sistem pengenalan wajah yang dibangun terdiri dari empat tahap utama, yaitu:
+</p>
+<ol>
+  <li><strong>Verifikasi Kamera</strong> (<em>video read.py</em>): Memastikan kamera webcam berfungsi dengan baik dan dapat menampilkan frame video secara real-time.</li>
+  <li><strong>Deteksi Wajah</strong> (<em>face_detection.py</em>): Menguji kemampuan Haar Cascade Classifier dalam mendeteksi wajah dari umpan kamera dan menampilkan bounding box di sekitar wajah yang terdeteksi.</li>
+  <li><strong>Pengumpulan Data</strong> (<em>face_data.py</em>): Mengekstrak citra wajah dari video secara otomatis setiap 10 frame, meresize ke 100x100 piksel, dan menyimpan 100 sampel per individu dalam format <em>.npy</em>.</li>
+  <li><strong>Pengenalan Wajah</strong> (<em>face_recognition.py</em>): Memuat dataset yang telah tersimpan, membangun trainset KNN, dan melakukan klasifikasi wajah secara real-time dengan menampilkan nama individu yang dikenali.</li>
+</ol>
+</div>
+
+<!-- BAB 3 -->
+<div class="page-break">
+<h1 class="bab">BAB 3<br>METODOLOGI PENELITIAN</h1>
+
+<h2 class="sub">3.1 Pengumpulan Data</h2>
+
+<h3 class="subsub">3.1.1 Sumber Data</h3>
+<p>
+  Data yang digunakan dalam penelitian ini adalah citra wajah yang dikumpulkan secara langsung menggunakan kamera webcam. Tidak digunakan dataset publik eksternal, melainkan dataset dibangun sendiri (<em>custom dataset</em>) agar sistem dapat mengenali individu-individu yang spesifik.
+</p>
+
+<h3 class="subsub">3.1.2 Prosedur Pengumpulan Data</h3>
+<p>
+  Pengumpulan data dilakukan menggunakan program <em>face_data.py</em> dengan prosedur sebagai berikut:
+</p>
+<ol>
+  <li>Program dijalankan dan subjek diminta memasukkan namanya.</li>
+  <li>Kamera menangkap video secara real-time dan Haar Cascade Classifier mendeteksi wajah pada setiap frame.</li>
+  <li>Wajah yang terdeteksi diekstrak dengan tambahan offset 5 piksel pada setiap sisi, kemudian diresize menjadi 100x100 piksel.</li>
+  <li>Setiap 10 frame yang mengandung wajah, satu sampel disimpan ke dalam list <em>face_data</em>.</li>
+  <li>Proses berhenti secara otomatis setelah 100 sampel terkumpul.</li>
+  <li>Dataset disimpan dalam format NumPy binary (<em>.npy</em>) di direktori <em>./face_dataset/</em> dengan nama file sesuai nama subjek.</li>
+</ol>
+
+<h3 class="subsub">3.1.3 Spesifikasi Dataset</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Nilai</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Ukuran citra</td><td>100 x 100 piksel (RGB)</td></tr>
+    <tr><td>Jumlah sampel per individu</td><td>100 sampel</td></tr>
+    <tr><td>Interval pengambilan sampel</td><td>Setiap 10 frame</td></tr>
+    <tr><td>Format penyimpanan</td><td>.npy (NumPy binary)</td></tr>
+    <tr><td>Dimensi vektor fitur</td><td>30.000 (100 x 100 x 3)</td></tr>
+    <tr><td>Kondisi pengambilan</td><td>Indoor, pencahayaan ruangan</td></tr>
+  </tbody>
+</table>
+
+<h2 class="sub">3.2 Rancangan Eksperimen yang Diusulkan</h2>
+
+<h3 class="subsub">3.2.1 Arsitektur Sistem</h3>
+<p>
+  Sistem dirancang dengan arsitektur pipeline empat modul yang berjalan secara berurutan. Setiap modul merupakan program Python yang berdiri sendiri dan dapat dijalankan secara independen.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Modul</th>
+      <th>File</th>
+      <th>Fungsi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>1. Verifikasi Kamera</td><td>video read.py</td><td>Uji koneksi dan tampilan webcam</td></tr>
+    <tr><td>2. Deteksi Wajah</td><td>face_detection.py</td><td>Deteksi wajah real-time dengan Haar Cascade</td></tr>
+    <tr><td>3. Pengumpulan Data</td><td>face_data.py</td><td>Kumpulkan dan simpan dataset wajah</td></tr>
+    <tr><td>4. Pengenalan Wajah</td><td>face_recognition.py</td><td>Klasifikasi wajah real-time dengan KNN</td></tr>
+  </tbody>
+</table>
+
+<h3 class="subsub">3.2.2 Alur Kerja Sistem</h3>
+<p class="no-indent">Alur kerja sistem secara keseluruhan adalah sebagai berikut:</p>
+<ol>
+  <li><strong>Input:</strong> Frame video dari kamera webcam diambil secara real-time menggunakan <code>cv2.VideoCapture(0)</code>.</li>
+  <li><strong>Preprocessing:</strong> Frame dikonversi ke grayscale untuk proses deteksi wajah menggunakan Haar Cascade Classifier.</li>
+  <li><strong>Deteksi Wajah:</strong> Haar Cascade mendeteksi koordinat bounding box wajah pada frame grayscale.</li>
+  <li><strong>Ekstraksi ROI:</strong> Region of Interest (ROI) wajah diekstrak dari frame berwarna asli dengan tambahan offset, kemudian diresize ke 100x100 piksel.</li>
+  <li><strong>Klasifikasi KNN:</strong> ROI wajah di-flatten menjadi vektor 1D dan diklasifikasikan menggunakan KNN berdasarkan jarak Euclidean terhadap data latih.</li>
+  <li><strong>Output:</strong> Nama individu yang dikenali ditampilkan di atas bounding box pada frame video secara real-time.</li>
+</ol>
+
+<h3 class="subsub">3.2.3 Parameter Eksperimen</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Nilai</th>
+      <th>Keterangan</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>scaleFactor Haar Cascade</td><td>1.3</td><td>Faktor pengurangan skala citra</td></tr>
+    <tr><td>minNeighbors Haar Cascade</td><td>5</td><td>Minimum tetangga untuk konfirmasi deteksi</td></tr>
+    <tr><td>Nilai k pada KNN</td><td>5</td><td>Jumlah tetangga terdekat</td></tr>
+    <tr><td>Ukuran citra wajah</td><td>100 x 100 piksel</td><td>Ukuran seragam untuk semua sampel</td></tr>
+    <tr><td>Offset ROI</td><td>5 piksel</td><td>Padding di sekitar bounding box wajah</td></tr>
+    <tr><td>Jumlah sampel latih</td><td>100 per individu</td><td>Dikumpulkan setiap 10 frame</td></tr>
+  </tbody>
+</table>
+
+<h3 class="subsub">3.2.4 Lingkungan Pengembangan</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Komponen</th>
+      <th>Spesifikasi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Bahasa Pemrograman</td><td>Python 3.11</td></tr>
+    <tr><td>Library Utama</td><td>OpenCV, NumPy</td></tr>
+    <tr><td>IDE</td><td>PyCharm</td></tr>
+    <tr><td>Platform</td><td>macOS</td></tr>
+    <tr><td>Input Device</td><td>Kamera Webcam</td></tr>
+    <tr><td>Repositori Kode</td><td>GitHub (Real-time-Face-Recognition-Project)</td></tr>
+  </tbody>
+</table>
+
+<h3 class="subsub">3.2.5 Rencana Evaluasi</h3>
+<p>
+  Evaluasi sistem akan dilakukan dengan mengukur kemampuan sistem dalam mengenali wajah individu yang terdaftar pada kondisi pencahayaan dan jarak yang bervariasi. Metrik evaluasi yang digunakan meliputi:
+</p>
+<ul>
+  <li><strong>Akurasi:</strong> Persentase prediksi identitas yang benar terhadap total frame yang diuji.</li>
+  <li><strong>Kecepatan deteksi:</strong> Jumlah frame per detik (FPS) yang diproses oleh sistem.</li>
+  <li><strong>Stabilitas pengenalan:</strong> Konsistensi label yang ditampilkan pada individu yang sama secara berurutan.</li>
+</ul>
+
+<hr class="divider">
+<p class="no-indent center" style="font-size:11pt; color:#555;">
+  Draft Proposal Penelitian &mdash; Heydie Zuliansyah (223250047) &mdash; 2026
+</p>
+</div>
+
+</body>
+</html>
