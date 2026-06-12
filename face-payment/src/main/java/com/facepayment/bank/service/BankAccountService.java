@@ -28,4 +28,14 @@ public class BankAccountService {
         account.setBalance(account.getBalance().subtract(amount));
         return bankAccountRepository.save(account);
     }
+
+    @Transactional
+    public BankAccount topUp(Long userId, BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("INVALID_AMOUNT: Amount must be greater than zero");
+        }
+        BankAccount account = getByUserId(userId);
+        account.setBalance(account.getBalance().add(amount));
+        return bankAccountRepository.save(account);
+    }
 }

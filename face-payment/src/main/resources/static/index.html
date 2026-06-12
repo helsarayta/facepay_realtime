@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FACEPAY</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:    #05050a;
+    --bg2:   #0c0c14;
+    --bg3:   #13131e;
+    --gold:  #c8923a;
+    --gold2: #e0aa55;
+    --cream: #e8dcc8;
+    --muted: #5a5870;
+    --dim:   #2a2838;
+    --green: #3dba7a;
+    --red:   #e05555;
+    --blue:  #4a90d9;
+  }
+
+  /* ── RESET / BASE ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--cream);
+    font-family: 'Outfit', sans-serif;
+    min-height: 100vh; overflow-x: hidden;
+  }
+  /* neutralise bootstrap on our elements */
+  a, button { outline: none; }
+  input, select, button { font-family: inherit; }
+
+  /* ── UTILITY ── */
+  .mono  { font-family: 'IBM Plex Mono', monospace; }
+  .serif { font-family: 'Playfair Display', serif; }
+  .hidden { display: none !important; }
+  .gold  { color: var(--gold); }
+  .muted { color: var(--muted); }
+  .green { color: var(--green); }
+  .red   { color: var(--red); }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: 0.4;
+  }
+
+  /* ── LOADING SCREEN ── */
+  #loading {
+    position: fixed; inset: 0; background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 9998; transition: opacity 0.6s;
+  }
+  #loading .logo-load {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem; color: var(--gold);
+    letter-spacing: 0.3em; opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+  #loading .tagline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem; color: var(--muted);
+    letter-spacing: 0.2em; margin-top: 0.5rem;
+    opacity: 0; animation: fadeUp 1s ease 0.6s forwards;
+  }
+  #loading .bar {
+    width: 120px; height: 1px; background: var(--dim);
+    margin-top: 2rem; overflow: hidden;
+    opacity: 0; animation: fadeUp 0.5s ease 0.9s forwards;
+  }
+  #loading .bar::after {
+    content: ''; display: block; height: 100%;
+    background: var(--gold); animation: loadBar 1.2s ease 1s forwards;
+  }
+  @keyframes loadBar { from { width: 0 } to { width: 100% } }
+  @keyframes fadeUp  { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:none } }
+
+  /* ── TOP NAV ── */
+  nav#top-nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 2rem;
+    background: linear-gradient(to bottom, rgba(5,5,10,0.95), transparent);
+    z-index: 200; backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(200,146,58,0.1);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem; color: var(--gold); letter-spacing: 0.15em;
+    cursor: pointer;
+  }
+  .nav-links { display: flex; gap: 0.5rem; align-items: center; }
+  .nav-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.1em;
+    padding: 0.4rem 0.8rem; border-radius: 2px;
+    transition: color 0.2s;
+  }
+  .nav-btn:hover, .nav-btn.active { color: var(--cream); }
+  .nav-btn.active { color: var(--gold); }
+  #nav-logout {
+    border: 1px solid rgba(200,146,58,0.3); color: var(--gold);
+    margin-left: 0.5rem;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  #nav-logout:hover { background: rgba(200,146,58,0.08); border-color: var(--gold); }
+  #mob-logout-btn {
+    display: none;
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); padding: 0.4rem;
+    transition: color 0.2s;
+  }
+  #mob-logout-btn:hover { color: var(--red); }
+
+  /* ── PAGE CONTAINER ── */
+  .page { display: none; min-height: 100vh; padding-top: 5rem; }
+  .page.active { display: block; animation: pageIn 0.4s ease; }
+  @keyframes pageIn { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:none } }
+  .page-inner { padding: 0 1.5rem 4rem; max-width: 1200px; margin: 0 auto; }
+
+  /* ── AUTH PAGE ── */
+  #page-auth { padding-top: 0; }
+  #page-auth.active { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+  .auth-wrap {
+    width: 100%; max-width: 440px;
+    padding: 3rem;
+    background: var(--bg2);
+    border: 1px solid var(--dim);
+    position: relative; overflow: hidden;
+  }
+  .auth-wrap::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .auth-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; color: var(--gold);
+    margin-bottom: 0.3rem; letter-spacing: 0.05em;
+  }
+  .auth-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; color: var(--muted);
+    letter-spacing: 0.15em; margin-bottom: 2rem;
+  }
+  .auth-tabs {
+    display: flex; margin-bottom: 2rem;
+    border-bottom: 1px solid var(--dim);
+  }
+  .auth-tab {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem; padding: 0.6rem 1.2rem;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .auth-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* ── FORM FIELDS ── */
+  .field { margin-bottom: 1.2rem; }
+  .field label {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; color: var(--muted);
+    letter-spacing: 0.12em; margin-bottom: 0.4rem; text-transform: uppercase;
+  }
+  .field input,
+  .field select {
+    width: 100%; background: var(--bg3);
+    border: 1px solid var(--dim); border-radius: 2px;
+    color: var(--cream); font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem; padding: 0.7rem 0.9rem;
+    outline: none; transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  .field input:focus,
+  .field select:focus { border-color: var(--gold); }
+  .field input::placeholder { color: var(--muted); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    cursor: pointer; border: none; border-radius: 2px;
+    font-family: 'Outfit', sans-serif; font-weight: 500;
+    transition: all 0.2s; letter-spacing: 0.05em;
+  }
+  .btn-primary {
+    background: var(--gold); color: #05050a;
+    padding: 0.75rem 1.5rem; font-size: 0.9rem; width: 100%;
+  }
+  .btn-primary:hover { background: var(--gold2); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-outline {
+    background: none; border: 1px solid var(--gold); color: var(--gold);
+    padding: 0.65rem 1.3rem; font-size: 0.85rem;
+  }
+  .btn-outline:hover { background: rgba(200,146,58,0.1); }
+  .btn-ghost {
+    background: none; border: 1px solid var(--dim); color: var(--muted);
+    padding: 0.5rem 1rem; font-size: 0.8rem;
+  }
+  .btn-ghost:hover { border-color: var(--muted); color: var(--cream); }
+  .btn-danger {
+    background: none; border: 1px solid rgba(224,85,85,0.4); color: var(--red);
+    padding: 0.5rem 1rem; font-size: 0.8rem;
+  }
+  .btn-danger:hover { background: rgba(224,85,85,0.08); }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    padding: 0.9rem 1.4rem; border-radius: 2px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem;
+    z-index: 9997; opacity: 0; transform: translateY(8px);
+    transition: all 0.3s; pointer-events: none;
+    border-left: 3px solid var(--gold);
+    background: var(--bg2); max-width: 340px;
+  }
+  #toast.show { opacity: 1; transform: none; }
+  #toast.error   { border-left-color: var(--red); }
+  #toast.success { border-left-color: var(--green); }
+
+  /* ── DASHBOARD CARDS ── */
+  .dash-card {
+    background: var(--bg2); padding: 1.8rem;
+    border: 1px solid var(--dim);
+  }
+  .card-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem; color: var(--muted);
+    letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.6rem;
+  }
+  .card-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem; color: var(--cream);
+  }
+  .card-value.big { font-size: 2.8rem; color: var(--gold); }
+  .card-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem; color: var(--muted); margin-top: 0.4rem;
+  }
+  .section-header {
+    display: flex; align-items: baseline; gap: 1rem;
+    margin-bottom: 1rem; flex-wrap: wrap;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; color: var(--cream);
+  }
+  .section-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em;
+  }
+
+  /* ── FACE SETUP ── */
+  .camera-box {
+    position: relative; background: var(--bg2);
+    border: 1px solid var(--dim); overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  .camera-box video, .camera-box canvas {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .camera-box canvas { position: absolute; inset: 0; }
+  .camera-overlay {
+    position: absolute; inset: 0; display: flex;
+    align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .face-frame {
+    width: 220px; height: 275px;
+    border: 2px solid rgba(200,146,58,0.7);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(200,146,58,0.2), inset 0 0 40px rgba(200,146,58,0.05);
+    animation: pulse 2s ease infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 0 1px rgba(200,146,58,0.15), 0 0 20px rgba(200,146,58,0.05) }
+    50%      { box-shadow: 0 0 0 2px rgba(200,146,58,0.3),  0 0 30px rgba(200,146,58,0.1)  }
+  }
+  .progress-bar {
+    height: 2px; background: var(--dim); overflow: hidden; margin: 1rem 0;
+  }
+  .progress-fill { height: 100%; background: var(--gold); transition: width 0.3s ease; }
+  .status-list { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1rem; }
+  .status-item {
+    display: flex; align-items: center; gap: 0.75rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem; color: var(--muted);
+  }
+  .status-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--dim); flex-shrink: 0;
+  }
+  .status-dot.done   { background: var(--green); }
+  .status-dot.active { background: var(--gold); animation: blink 1s ease infinite; }
+  @keyframes blink { 0%,100% { opacity:1 } 50% { opacity:0.3 } }
+
+  /* ── STORE ── */
+  .product-card {
+    background: var(--bg2); padding: 1.2rem;
+    display: flex; flex-direction: column; gap: 0.7rem;
+    transition: background 0.2s; height: 100%;
+    border: 1px solid var(--dim);
+  }
+  .product-card:hover { background: var(--bg3); }
+  .product-img {
+    width: 100%; aspect-ratio: 1;
+    background: var(--bg3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.4rem; border: 1px solid var(--dim);
+  }
+  .product-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem; color: var(--cream);
+  }
+  .product-price {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem; color: var(--gold);
+  }
+  .product-stock {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; color: var(--muted);
+  }
+  .qty-control { display: flex; align-items: center; gap: 0.5rem; }
+  .qty-btn {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--bg3); border: 1px solid var(--dim);
+    color: var(--cream); cursor: pointer; font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s;
+  }
+  .qty-btn:hover { border-color: var(--gold); }
+  .qty-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem; min-width: 20px; text-align: center;
+  }
+
+  /* ── CART PANEL ── */
+  .cart-panel {
+    background: var(--bg2); border: 1px solid var(--dim);
+    padding: 1.5rem; position: sticky; top: 5rem; height: fit-content;
+  }
+  .cart-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem; margin-bottom: 1.2rem;
+    padding-bottom: 1rem; border-bottom: 1px solid var(--dim);
+  }
+  .cart-items { display: flex; flex-direction: column; gap: 0.8rem; min-height: 60px; }
+  .cart-item {
+    display: flex; justify-content: space-between; align-items: start;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+  }
+  .cart-item-name  { color: var(--cream); flex: 1; }
+  .cart-item-detail { color: var(--muted); }
+  .cart-total {
+    margin-top: 1.2rem; padding-top: 1rem;
+    border-top: 1px solid var(--dim);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .cart-total-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .cart-total-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; color: var(--gold);
+  }
+  .empty-cart {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem; color: var(--muted); text-align: center; padding: 1rem 0;
+  }
+
+  /* ── CHECKOUT MODAL ── */
+  .pay-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(5,5,10,0.85); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 500; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .pay-backdrop.open { opacity: 1; pointer-events: all; }
+  .pay-modal {
+    width: 100%; max-width: 480px;
+    background: var(--bg2); border: 1px solid var(--dim);
+    position: relative;
+    transform: translateY(16px); transition: transform 0.3s;
+  }
+  .pay-backdrop.open .pay-modal { transform: none; }
+  .pay-modal-header {
+    padding: 1.5rem; border-bottom: 1px solid var(--dim);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .pay-modal-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+  .pay-modal-close {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 1.2rem; padding: 0.2rem;
+  }
+  .pay-modal-close:hover { color: var(--cream); }
+  .pay-modal-body { padding: 1.5rem; }
+  .modal-camera {
+    position: relative; background: var(--bg);
+    border: 1px solid var(--dim); aspect-ratio: 4/3; overflow: hidden; margin-bottom: 1rem;
+  }
+  .modal-camera video { width: 100%; height: 100%; object-fit: cover; }
+  .modal-camera .face-frame { width: 180px; height: 225px; }
+  .modal-order-summary {
+    background: var(--bg3); border: 1px solid var(--dim);
+    padding: 1rem; margin-bottom: 1rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+  }
+  .modal-order-row { display: flex; justify-content: space-between; padding: 0.2rem 0; }
+  .modal-order-row.total {
+    border-top: 1px solid var(--dim); margin-top: 0.5rem;
+    padding-top: 0.7rem; color: var(--gold); font-size: 0.85rem;
+  }
+  .modal-status {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem; color: var(--muted); text-align: center;
+    min-height: 1.2rem; margin-bottom: 1rem;
+  }
+
+  /* ── TOPUP MODAL ── */
+  .topup-amounts { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 1rem; }
+  .topup-chip {
+    background: var(--bg3); border: 1px solid var(--dim); border-radius: 6px;
+    padding: 8px 4px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem; color: var(--cream); cursor: pointer;
+    text-align: center; transition: border-color 0.2s, color 0.2s;
+  }
+  .topup-chip:hover, .topup-chip.active {
+    border-color: var(--gold); color: var(--gold);
+  }
+  .topup-input-row { display: flex; gap: 8px; align-items: center; margin-bottom: 1rem; }
+  .topup-input-row input {
+    flex: 1; background: var(--bg3); border: 1px solid var(--dim);
+    border-radius: 6px; padding: 10px 12px; color: var(--cream);
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem;
+  }
+  .topup-input-row input:focus { outline: none; border-color: var(--gold); }
+
+  /* ── ORDERS TABLE ── */
+  .orders-table { width: 100%; border-collapse: collapse; }
+  .orders-table th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--muted); padding: 0.8rem 1rem; text-align: left;
+    border-bottom: 1px solid var(--dim);
+  }
+  .orders-table td {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem; color: var(--cream); padding: 1rem;
+    border-bottom: 1px solid rgba(42,40,56,0.5);
+  }
+  .status-badge {
+    display: inline-block; padding: 0.25rem 0.6rem;
+    font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase;
+    border-radius: 2px;
+  }
+  .status-badge.success { background: rgba(61,186,122,0.15); color: var(--green); border: 1px solid rgba(61,186,122,0.3); }
+  .status-badge.failed  { background: rgba(224,85,85,0.1);   color: var(--red);   border: 1px solid rgba(224,85,85,0.25); }
+
+  /* ── DECORATIVE ── */
+  .gold-line {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 2rem 0; opacity: 0.3;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track  { background: transparent; }
+  ::-webkit-scrollbar-thumb  { background: var(--dim); border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* ── SCAN RING ── */
+  .scan-ring {
+    position: absolute; inset: 0; display: flex;
+    align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .scan-ring::after {
+    content: ''; width: 140px; height: 140px;
+    border-radius: 50%; border: 2px solid var(--gold);
+    animation: scanPulse 1.5s ease infinite;
+  }
+  @keyframes scanPulse {
+    0%   { transform: scale(0.8); opacity: 0.8; }
+    100% { transform: scale(1.4); opacity: 0; }
+  }
+
+  /* ══════════════════════════════════════════
+     MOBILE (Bootstrap handles grids; we handle
+     nav, bottom bar, modal sheet, spacing)
+  ══════════════════════════════════════════ */
+
+  /* ── MOBILE BOTTOM NAV ── */
+  #mob-nav { display: none; }
+
+  @media (max-width: 767.98px) {
+    /* top nav */
+    nav#top-nav { padding: 0.8rem 1.1rem; }
+    .nav-links  { display: none; }
+    #mob-logout-btn { display: flex; align-items: center; }
+
+    /* bottom tab bar */
+    #mob-nav:not(.hidden) {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      display: flex; align-items: stretch;
+      background: var(--bg2); border-top: 1px solid var(--dim);
+      z-index: 200;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+    .mob-tab {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 3px; padding: 0.55rem 0.2rem;
+      background: none; border: none; cursor: pointer;
+      color: var(--muted); font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.52rem; letter-spacing: 0.04em; text-transform: uppercase;
+      transition: color 0.2s; -webkit-tap-highlight-color: transparent;
+    }
+    .mob-tab.active { color: var(--gold); }
+
+    /* page padding */
+    .page { padding-top: 3.8rem; padding-bottom: 4.8rem; }
+    #page-auth       { padding: 0 !important; }
+    #page-auth.active { display: block !important; overflow-y: auto; }
+    .page-inner { padding: 0 0.75rem 2rem; }
+
+    /* auth */
+    .auth-wrap {
+      border-left: none; border-right: none; border-bottom: none;
+      padding: 3.5rem 1.4rem 2rem; min-height: 100vh;
+    }
+
+    /* dashboard cards */
+    .dash-card { padding: 1.2rem 1rem; }
+    .card-value.big { font-size: 2rem; }
+
+    /* cart not sticky on mobile */
+    .cart-panel { position: static; }
+
+    /* modal → bottom sheet */
+    .pay-backdrop { align-items: flex-end; }
+    .pay-modal {
+      max-width: 100%;
+      border-radius: 16px 16px 0 0;
+      max-height: 92vh; overflow-y: auto;
+    }
+    .pay-modal-body { padding: 1rem; }
+
+    /* toast above bottom nav */
+    #toast {
+      left: 0.75rem; right: 0.75rem; bottom: 5.2rem;
+      max-width: none;
+    }
+
+    /* gold line */
+    .gold-line { margin: 1rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Loading -->
+<div id="loading">
+  <div class="logo-load">FACEPAY</div>
+  <div class="tagline">BIOMETRIC BANKING SYSTEM</div>
+  <div class="bar"></div>
+</div>
+
+<!-- Top Nav -->
+<nav id="top-nav" class="hidden">
+  <div class="nav-logo" onclick="goPage('dashboard')">FACEPAY</div>
+  <div class="nav-links">
+    <button class="nav-btn" onclick="goPage('dashboard')" data-page="dashboard">DASHBOARD</button>
+    <button class="nav-btn" onclick="goPage('setup')"     data-page="setup">FACE SETUP</button>
+    <button class="nav-btn" onclick="goPage('store')"     data-page="store">STORE</button>
+    <button class="nav-btn" onclick="goPage('orders')"    data-page="orders">ORDERS</button>
+    <button class="nav-btn" id="nav-logout" onclick="logout()">LOGOUT</button>
+  </div>
+  <button id="mob-logout-btn" onclick="logout()" title="Logout">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+  </button>
+</nav>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Mobile Bottom Nav -->
+<nav id="mob-nav" class="hidden">
+  <button class="mob-tab" data-page="dashboard" onclick="goPage('dashboard')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+    <span>Dashboard</span>
+  </button>
+  <button class="mob-tab" data-page="setup" onclick="goPage('setup')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3"/><path d="M6 20v-1a6 6 0 0112 0v1"/></svg>
+    <span>Face</span>
+  </button>
+  <button class="mob-tab" data-page="store" onclick="goPage('store')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    <span>Store</span>
+  </button>
+  <button class="mob-tab" data-page="orders" onclick="goPage('orders')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+    <span>Orders</span>
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════ AUTH PAGE -->
+<div id="page-auth" class="page active">
+  <div class="auth-wrap">
+    <div class="auth-title">FACEPAY</div>
+    <div class="auth-sub">BIOMETRIC BANKING SYSTEM</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="auth-tab"        onclick="switchAuthTab('register')">Register</button>
+    </div>
+
+    <!-- Login -->
+    <form id="form-login" onsubmit="doLogin(event)">
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="login-email" placeholder="you@email.com" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary" id="btn-login">Sign In</button>
+    </form>
+
+    <!-- Register -->
+    <form id="form-register" class="hidden" onsubmit="doRegister(event)">
+      <div class="field"><label>Full Name</label>
+        <input type="text" id="reg-fullName" placeholder="John Doe" required></div>
+      <div class="field"><label>Email</label>
+        <input type="email" id="reg-email" placeholder="you@email.com" required></div>
+      <div class="field"><label>Phone</label>
+        <input type="text" id="reg-phone" placeholder="+62812345678" required></div>
+      <div class="field"><label>Password</label>
+        <input type="password" id="reg-password" placeholder="••••••••" required></div>
+      <div class="field"><label>Account Type</label>
+        <select id="reg-accountType">
+          <option value="SAVINGS">Savings</option>
+          <option value="CHECKING">Checking</option>
+        </select>
+      </div>
+      <div class="field"><label>Initial Balance (Rp)</label>
+        <input type="number" id="reg-initialBalance" placeholder="1000000" min="0" required></div>
+      <button type="submit" class="btn btn-primary" id="btn-register">Create Account</button>
+    </form>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ DASHBOARD PAGE -->
+<div id="page-dashboard" class="page">
+  <div class="page-inner">
+    <div class="section-header mb-3">
+      <div class="section-title" id="dash-greeting">Welcome back</div>
+      <div class="section-sub mono" id="dash-date"></div>
+    </div>
+
+    <!-- Bootstrap grid — 12 cols -->
+    <div class="row g-1">
+      <!-- Balance: 8/12 on md+, full on mobile -->
+      <div class="col-12 col-md-8">
+        <div class="dash-card">
+          <div class="card-label">Available Balance</div>
+          <div class="card-value big" id="dash-balance">—</div>
+          <div class="card-sub" id="dash-account-no"></div>
+          <button class="btn btn-outline mt-2" onclick="openTopupModal()" style="font-size:0.75rem;padding:6px 14px">+ Top Up Balance</button>
+        </div>
+      </div>
+      <!-- Face payment: 4/12 on md+, 6/12 on mobile -->
+      <div class="col-6 col-md-4">
+        <div class="dash-card h-100">
+          <div class="card-label">Face Payment</div>
+          <div class="card-value" id="dash-face-status" style="font-size:1rem;padding-top:0.3rem">—</div>
+          <div class="card-sub">Biometric Auth</div>
+        </div>
+      </div>
+      <!-- Account type: 6/12 mobile, 4/12 md+ -->
+      <div class="col-6 col-md-4">
+        <div class="dash-card h-100">
+          <div class="card-label">Account Type</div>
+          <div class="card-value" style="font-size:1rem;padding-top:0.3rem">PERSONAL</div>
+          <div class="card-sub">Standard Account</div>
+        </div>
+      </div>
+      <!-- Account status: 6/12 mobile, 4/12 md+ -->
+      <div class="col-6 col-md-4">
+        <div class="dash-card h-100">
+          <div class="card-label">Account Status</div>
+          <div class="card-value green" style="font-size:1rem;padding-top:0.3rem">ACTIVE</div>
+          <div class="card-sub">All systems nominal</div>
+        </div>
+      </div>
+      <!-- Transactions: 6/12 mobile, 4/12 md+ -->
+      <div class="col-6 col-md-4">
+        <div class="dash-card h-100">
+          <div class="card-label">Security</div>
+          <div class="card-value" style="font-size:1rem;padding-top:0.3rem;color:var(--blue)">256-BIT</div>
+          <div class="card-sub">End-to-end encrypted</div>
+        </div>
+      </div>
+      <!-- Quick actions: full width -->
+      <div class="col-12">
+        <div class="dash-card">
+          <div class="card-label">Quick Actions</div>
+          <div class="d-flex gap-2 mt-2 flex-wrap">
+            <button class="btn btn-outline" onclick="goPage('setup')">Setup Face Payment</button>
+            <button class="btn btn-outline" onclick="goPage('store')">Browse Store</button>
+            <button class="btn btn-ghost"   onclick="goPage('orders')">View Order History</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ FACE SETUP PAGE -->
+<div id="page-setup" class="page">
+  <div class="page-inner">
+    <div class="section-header">
+      <div class="section-title">Face Enrollment</div>
+      <div class="section-sub">BIOMETRIC SETUP</div>
+    </div>
+    <div class="gold-line"></div>
+
+    <!-- Bootstrap 2-col on md+, stacked on mobile -->
+    <div class="row g-4">
+      <div class="col-12 col-md-6">
+        <div class="camera-box" id="setup-camera-box">
+          <video id="setup-video" autoplay muted playsinline></video>
+          <canvas id="setup-canvas" class="hidden"></canvas>
+          <div class="camera-overlay"><div class="face-frame"></div></div>
+        </div>
+        <div class="progress-bar" style="margin-top:0.8rem">
+          <div class="progress-fill" id="setup-progress" style="width:0%"></div>
+        </div>
+        <div class="mono" style="font-size:0.7rem;color:var(--muted);margin-top:0.4rem" id="setup-count">
+          0 / 30 frames captured
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <h3 class="serif" style="font-size:1.3rem;margin-bottom:1rem;color:var(--cream)">Setup Instructions</h3>
+        <div class="status-list" id="setup-steps">
+          <div class="status-item"><div class="status-dot" id="step1-dot"></div><span id="step1-text">Position your face in the oval frame</span></div>
+          <div class="status-item"><div class="status-dot" id="step2-dot"></div><span id="step2-text">Ensure good lighting, face the camera</span></div>
+          <div class="status-item"><div class="status-dot" id="step3-dot"></div><span id="step3-text">Stay still during capture (6 seconds)</span></div>
+          <div class="status-item"><div class="status-dot" id="step4-dot"></div><span id="step4-text">Uploading biometric data…</span></div>
+          <div class="status-item"><div class="status-dot" id="step5-dot"></div><span id="step5-text">Enrollment complete</span></div>
+        </div>
+        <div style="margin-top:2rem;display:flex;flex-direction:column;gap:0.8rem">
+          <button class="btn btn-primary" id="btn-start-enroll" onclick="startEnrollment()">Start Enrollment</button>
+          <button class="btn btn-ghost hidden" id="btn-retry-enroll" onclick="resetEnrollment()">Retry</button>
+        </div>
+        <div style="margin-top:1.5rem;padding:1rem;background:var(--bg2);border:1px solid var(--dim)">
+          <div class="card-label" style="margin-bottom:0.5rem">Note</div>
+          <div style="font-size:0.8rem;color:var(--muted);line-height:1.6">
+            30 frames will be captured over ~6 seconds. Keep your face centered and well-lit.
+            Face payment will remain active until you re-enroll.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ STORE PAGE -->
+<div id="page-store" class="page">
+  <div class="page-inner">
+    <div class="section-header">
+      <div class="section-title">Store</div>
+      <div class="section-sub">PREMIUM COLLECTION</div>
+    </div>
+    <div class="gold-line"></div>
+
+    <!-- Bootstrap: products 8 cols, cart 4 cols on lg+; stacked on mobile -->
+    <div class="row g-3">
+      <div class="col-12 col-lg-8">
+        <!-- row-cols-2 on mobile, row-cols-3 on md+ -->
+        <div class="row g-0 row-cols-2 row-cols-md-3" id="product-grid">
+          <div class="col">
+            <div class="product-card" style="color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:0.75rem">
+              Loading products…
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <div class="cart-panel">
+          <div class="cart-title">Cart</div>
+          <div class="cart-items" id="cart-items">
+            <div class="empty-cart">Your cart is empty</div>
+          </div>
+          <div class="cart-total">
+            <div class="cart-total-label">Total</div>
+            <div class="cart-total-val" id="cart-total">Rp 0</div>
+          </div>
+          <button class="btn btn-primary mt-3" onclick="openCheckoutModal()">
+            Checkout with Face
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ CHECKOUT MODAL -->
+<div class="pay-backdrop" id="modal-checkout">
+  <div class="pay-modal">
+    <div class="pay-modal-header">
+      <div class="pay-modal-title">Face Verification</div>
+      <button class="pay-modal-close" onclick="closeCheckoutModal()">✕</button>
+    </div>
+    <div class="pay-modal-body">
+      <div class="modal-camera" id="checkout-camera-box">
+        <video id="checkout-video" autoplay muted playsinline></video>
+        <div class="camera-overlay"><div class="face-frame"></div></div>
+        <div class="scan-ring hidden" id="scan-ring"></div>
+      </div>
+      <div class="modal-order-summary" id="checkout-summary"></div>
+      <div class="modal-status" id="checkout-status">Position your face in the frame</div>
+      <button class="btn btn-primary" id="btn-pay" onclick="doCheckout()">Confirm &amp; Pay</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ TOPUP MODAL -->
+<div class="pay-backdrop" id="modal-topup">
+  <div class="pay-modal">
+    <div class="pay-modal-header">
+      <div class="pay-modal-title">Top Up Balance</div>
+      <button class="pay-modal-close" onclick="closeTopupModal()">✕</button>
+    </div>
+    <div class="pay-modal-body">
+      <div class="pay-modal-status" style="font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);margin-bottom:0.75rem">Select or enter amount</div>
+      <div class="topup-amounts">
+        <div class="topup-chip" onclick="selectTopup(50000)">Rp 50K</div>
+        <div class="topup-chip" onclick="selectTopup(100000)">Rp 100K</div>
+        <div class="topup-chip" onclick="selectTopup(200000)">Rp 200K</div>
+        <div class="topup-chip" onclick="selectTopup(500000)">Rp 500K</div>
+      </div>
+      <div class="topup-input-row">
+        <input type="number" id="topup-amount" placeholder="Custom amount (Rp)" min="1000" step="1000"
+               oninput="document.querySelectorAll('.topup-chip').forEach(c=>c.classList.remove('active'))"/>
+      </div>
+      <div id="topup-status" style="font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);min-height:1.2rem;margin-bottom:1rem;text-align:center"></div>
+      <button class="btn btn-primary w-100" id="btn-topup" onclick="doTopup()">Confirm Top Up</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ ORDERS PAGE -->
+<div id="page-orders" class="page">
+  <div class="page-inner">
+    <div class="section-header">
+      <div class="section-title">Order History</div>
+      <div class="section-sub">TRANSACTION RECORDS</div>
+    </div>
+    <div class="gold-line"></div>
+    <div style="background:var(--bg2);border:1px solid var(--dim);overflow-x:auto">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="orders-tbody">
+          <tr><td colspan="4" style="text-align:center;color:var(--muted)">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════
+let token    = localStorage.getItem('fp_token') || null;
+let userId   = localStorage.getItem('fp_user_id') ? Number(localStorage.getItem('fp_user_id')) : null;
+let userName = localStorage.getItem('fp_user_name') || '';
+let cart     = {};
+let products = [];
+let setupStream   = null;
+let checkoutStream = null;
+
+const API = '';
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loading').style.opacity = '0';
+    setTimeout(() => {
+      document.getElementById('loading').style.display = 'none';
+      if (token && userId) {
+        showNav(); goPage('dashboard'); loadDashboard();
+      } else {
+        goPage('auth');
+      }
+    }, 600);
+  }, 2200);
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// ROUTING
+// ═══════════════════════════════════════════════════════════════════
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('[data-page]').forEach(b => b.classList.remove('active'));
+  const page = document.getElementById('page-' + name);
+  if (page) page.classList.add('active');
+  document.querySelectorAll(`[data-page="${name}"]`).forEach(b => b.classList.add('active'));
+
+  stopSetupCamera();
+  stopCheckoutCamera();
+
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'store')     loadStore();
+  if (name === 'orders')    loadOrders();
+  if (name === 'setup')     initSetupCamera();
+}
+
+function showNav() {
+  document.getElementById('top-nav').classList.remove('hidden');
+  document.getElementById('mob-nav').classList.remove('hidden');
+}
+function hideNav() {
+  document.getElementById('top-nav').classList.add('hidden');
+  document.getElementById('mob-nav').classList.add('hidden');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// API HELPER
+// ═══════════════════════════════════════════════════════════════════
+async function api(method, path, body = null, isForm = false) {
+  const headers = {};
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  if (!isForm && body) headers['Content-Type'] = 'application/json';
+  const opts = { method, headers };
+  if (body) opts.body = isForm ? body : JSON.stringify(body);
+  const res  = await fetch(API + path, opts);
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.message || json?.error || `Error ${res.status}`);
+  return json;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════════
+let toastTimer;
+function toast(msg, type = 'info') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = `show ${type}`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3800);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════════════════
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+  });
+  document.getElementById('form-login').classList.toggle('hidden', tab !== 'login');
+  document.getElementById('form-register').classList.toggle('hidden', tab !== 'register');
+}
+
+async function doLogin(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-login');
+  btn.disabled = true; btn.textContent = 'Signing in…';
+  try {
+    const res = await api('POST', '/api/auth/login', {
+      email:    document.getElementById('login-email').value,
+      password: document.getElementById('login-password').value
+    });
+    token    = res.data?.token    || res.token;
+    userId   = res.data?.userId   || res.userId;
+    userName = res.data?.fullName || res.data?.name || res.fullName || '';
+    localStorage.setItem('fp_token',     token);
+    localStorage.setItem('fp_user_id',   userId);
+    localStorage.setItem('fp_user_name', userName);
+    showNav(); goPage('dashboard'); loadDashboard();
+  } catch (err) { toast(err.message, 'error'); }
+  btn.disabled = false; btn.textContent = 'Sign In';
+}
+
+async function doRegister(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-register');
+  btn.disabled = true; btn.textContent = 'Creating…';
+  try {
+    await api('POST', '/api/users/register', {
+      fullName:       document.getElementById('reg-fullName').value,
+      email:          document.getElementById('reg-email').value,
+      phone:          document.getElementById('reg-phone').value,
+      password:       document.getElementById('reg-password').value,
+      accountType:    document.getElementById('reg-accountType').value,
+      initialBalance: Number(document.getElementById('reg-initialBalance').value)
+    });
+    toast('Account created! Please sign in.', 'success');
+    switchAuthTab('login');
+    document.getElementById('login-email').value = document.getElementById('reg-email').value;
+  } catch (err) { toast(err.message, 'error'); }
+  btn.disabled = false; btn.textContent = 'Create Account';
+}
+
+function logout() {
+  token = null; userId = null; userName = '';
+  localStorage.removeItem('fp_token');
+  localStorage.removeItem('fp_user_id');
+  localStorage.removeItem('fp_user_name');
+  cart = {};
+  hideNav(); goPage('auth');
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════════════
+async function loadDashboard() {
+  const now = new Date();
+  document.getElementById('dash-date').textContent =
+    now.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('dash-greeting').textContent = `Welcome, ${userName}`;
+
+  try {
+    const res = await api('GET', `/api/bank/account/${userId}`);
+    const acc = res.data || res;
+    document.getElementById('dash-balance').textContent    = fmtRp(acc.balance);
+    document.getElementById('dash-account-no').textContent = acc.accountNumber || '';
+  } catch {}
+
+  try {
+    const res    = await api('GET', `/api/face/status/${userId}`);
+    const status = (res.data?.facePaymentStatus || res.facePaymentStatus || 'INACTIVE').toUpperCase();
+    const el     = document.getElementById('dash-face-status');
+    el.textContent = status;
+    el.className   = 'card-value ' + (status === 'ACTIVE' ? 'green' : 'muted');
+    el.style.cssText = 'font-size:1rem;padding-top:0.3rem';
+  } catch {}
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// TOP UP
+// ═══════════════════════════════════════════════════════════════════
+function openTopupModal() {
+  document.getElementById('topup-amount').value = '';
+  document.getElementById('topup-status').textContent = '';
+  document.getElementById('btn-topup').disabled = false;
+  document.getElementById('btn-topup').textContent = 'Confirm Top Up';
+  document.querySelectorAll('.topup-chip').forEach(c => c.classList.remove('active'));
+  document.getElementById('modal-topup').classList.add('open');
+}
+function closeTopupModal() {
+  document.getElementById('modal-topup').classList.remove('open');
+}
+function selectTopup(amount) {
+  document.getElementById('topup-amount').value = amount;
+  document.querySelectorAll('.topup-chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+}
+async function doTopup() {
+  const amount = Number(document.getElementById('topup-amount').value);
+  if (!amount || amount < 1000) {
+    document.getElementById('topup-status').textContent = 'Minimum top-up is Rp 1.000';
+    return;
+  }
+  const btn = document.getElementById('btn-topup');
+  btn.disabled = true; btn.textContent = 'Processing…';
+  document.getElementById('topup-status').textContent = '';
+  try {
+    const res = await api('POST', '/api/bank/account/topup', { userId, amount });
+    const data = res.data || res;
+    closeTopupModal();
+    document.getElementById('dash-balance').textContent = fmtRp(data.balance);
+    toast(`Balance topped up! New balance: ${fmtRp(data.balance)}`, 'success');
+  } catch (err) {
+    document.getElementById('topup-status').textContent = err.message || 'Top-up failed';
+    btn.disabled = false; btn.textContent = 'Confirm Top Up';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// FACE SETUP
+// ═══════════════════════════════════════════════════════════════════
+let enrollFrames = [];
+let enrollTimer  = null;
+
+async function initSetupCamera() {
+  resetEnrollment();
+  try {
+    setupStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode:'user', width:640, height:480 } });
+    document.getElementById('setup-video').srcObject = setupStream;
+  } catch (err) {
+    toast('Camera access denied. Please allow camera in browser settings.', 'error');
+  }
+}
+function stopSetupCamera() {
+  if (setupStream) { setupStream.getTracks().forEach(t => t.stop()); setupStream = null; }
+  clearInterval(enrollTimer); enrollTimer = null;
+}
+function resetEnrollment() {
+  enrollFrames = [];
+  clearInterval(enrollTimer); enrollTimer = null;
+  document.getElementById('setup-progress').style.width = '0%';
+  document.getElementById('setup-count').textContent    = '0 / 30 frames captured';
+  document.getElementById('btn-start-enroll').classList.remove('hidden');
+  document.getElementById('btn-retry-enroll').classList.add('hidden');
+  ['step1','step2','step3','step4','step5'].forEach(s => {
+    document.getElementById(s + '-dot').className = 'status-dot';
+  });
+}
+function startEnrollment() {
+  if (!setupStream) { toast('Camera not ready', 'error'); return; }
+  document.getElementById('btn-start-enroll').classList.add('hidden');
+  document.getElementById('step1-dot').className = 'status-dot done';
+  document.getElementById('step2-dot').className = 'status-dot done';
+  document.getElementById('step3-dot').className = 'status-dot active';
+
+  const video  = document.getElementById('setup-video');
+  const canvas = document.createElement('canvas');
+  canvas.width = 640; canvas.height = 480;
+  const ctx    = canvas.getContext('2d');
+  const total  = 30;
+
+  enrollTimer = setInterval(async () => {
+    ctx.drawImage(video, 0, 0, 640, 480);
+    const blob = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.85));
+    enrollFrames.push(blob);
+    const pct = Math.round(enrollFrames.length / total * 100);
+    document.getElementById('setup-progress').style.width = pct + '%';
+    document.getElementById('setup-count').textContent    = `${enrollFrames.length} / ${total} frames captured`;
+    if (enrollFrames.length >= total) {
+      clearInterval(enrollTimer); enrollTimer = null;
+      document.getElementById('step3-dot').className = 'status-dot done';
+      document.getElementById('step4-dot').className = 'status-dot active';
+      await submitEnrollment();
+    }
+  }, 200);
+}
+async function submitEnrollment() {
+  try {
+    const fd = new FormData();
+    enrollFrames.forEach((b, i) => fd.append('files', b, `frame${i}.jpg`));
+    const res  = await fetch(`/api/face/activate/${userId}`, {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      body: fd
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json?.message || 'Enrollment failed');
+    document.getElementById('step4-dot').className = 'status-dot done';
+    document.getElementById('step5-dot').className = 'status-dot done';
+    toast('Face payment activated!', 'success');
+    document.getElementById('btn-retry-enroll').classList.remove('hidden');
+  } catch (err) {
+    document.getElementById('step4-dot').className = 'status-dot';
+    toast(err.message, 'error');
+    document.getElementById('btn-retry-enroll').classList.remove('hidden');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// STORE
+// ═══════════════════════════════════════════════════════════════════
+async function loadStore() {
+  try {
+    const res = await api('GET', '/api/store/products');
+    products  = res.data || res || [];
+    renderProducts();
+  } catch (err) {
+    document.getElementById('product-grid').innerHTML =
+      `<div class="col"><div class="product-card" style="color:var(--red);font-family:'IBM Plex Mono',monospace;font-size:0.75rem">Failed to load products.</div></div>`;
+  }
+}
+
+function renderProducts() {
+  const grid = document.getElementById('product-grid');
+  if (!products.length) {
+    grid.innerHTML = `<div class="col"><div class="product-card" style="color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:0.75rem">No products available.</div></div>`;
+    return;
+  }
+  const emojis = ['📦','🎁','💎','⌚','👜','🖥️','📱','🎧','👟','🕶️'];
+  grid.innerHTML = products.map((p, idx) => `
+    <div class="col">
+      <div class="product-card">
+        <div class="product-img">${emojis[idx % emojis.length]}</div>
+        <div class="product-name">${esc(p.name)}</div>
+        <div class="product-price">${fmtRp(p.price)}</div>
+        <div class="product-stock">Stock: ${p.stock}</div>
+        <div class="qty-control" style="margin-top:auto">
+          <button class="qty-btn" onclick="changeQty(${p.id},-1)">−</button>
+          <span class="qty-val" id="qty-${p.id}">${cart[p.id]?.qty || 0}</span>
+          <button class="qty-btn" onclick="changeQty(${p.id}, 1)">+</button>
+          <button class="btn btn-outline" style="margin-left:auto;padding:0.3rem 0.7rem;font-size:0.7rem" onclick="addToCart(${p.id})">Add</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function changeQty(pid, delta) {
+  const el = document.getElementById('qty-' + pid);
+  if (!el) return;
+  const p = products.find(p => p.id === pid);
+  if (!p) return;
+  el.textContent = Math.max(0, Math.min(parseInt(el.textContent) + delta, p.stock));
+}
+
+function addToCart(pid) {
+  const p   = products.find(p => p.id === pid);
+  if (!p) return;
+  const qty = parseInt(document.getElementById('qty-' + pid)?.textContent || '1');
+  if (qty === 0)        { toast('Set a quantity first', 'error');  return; }
+  if (p.stock < qty)    { toast('Not enough stock',     'error');  return; }
+  cart[pid] = cart[pid]
+    ? { product: p, qty: Math.min(cart[pid].qty + qty, p.stock) }
+    : { product: p, qty };
+  renderCart();
+  toast(`${p.name} added to cart`, 'success');
+}
+
+function renderCart() {
+  const el    = document.getElementById('cart-items');
+  const items = Object.values(cart);
+  if (!items.length) {
+    el.innerHTML = '<div class="empty-cart">Your cart is empty</div>';
+    document.getElementById('cart-total').textContent = 'Rp 0';
+    return;
+  }
+  el.innerHTML = items.map(i => `
+    <div class="cart-item">
+      <div>
+        <div class="cart-item-name">${esc(i.product.name)}</div>
+        <div class="cart-item-detail">${i.qty} × ${fmtRp(i.product.price)}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.3rem">
+        <span style="color:var(--gold)">${fmtRp(i.product.price * i.qty)}</span>
+        <button onclick="removeFromCart(${i.product.id})" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:0.65rem;font-family:'IBM Plex Mono',monospace">remove</button>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('cart-total').textContent =
+    fmtRp(items.reduce((s, i) => s + i.product.price * i.qty, 0));
+}
+
+function removeFromCart(pid) { delete cart[pid]; renderCart(); }
+
+// ═══════════════════════════════════════════════════════════════════
+// CHECKOUT MODAL
+// ═══════════════════════════════════════════════════════════════════
+async function openCheckoutModal() {
+  const items = Object.values(cart);
+  if (!items.length) { toast('Cart is empty', 'error'); return; }
+
+  let rows = items.map(i =>
+    `<div class="modal-order-row"><span>${esc(i.product.name)} ×${i.qty}</span><span>${fmtRp(i.product.price * i.qty)}</span></div>`
+  ).join('');
+  const total = items.reduce((s, i) => s + i.product.price * i.qty, 0);
+  rows += `<div class="modal-order-row total"><span>Total</span><span>${fmtRp(total)}</span></div>`;
+  document.getElementById('checkout-summary').innerHTML  = rows;
+  document.getElementById('checkout-status').textContent = 'Position your face in the frame';
+  document.getElementById('btn-pay').disabled    = false;
+  document.getElementById('btn-pay').textContent = 'Confirm & Pay';
+  document.getElementById('scan-ring').classList.add('hidden');
+  document.getElementById('modal-checkout').classList.add('open');
+
+  try {
+    checkoutStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode:'user', width:640, height:480 } });
+    document.getElementById('checkout-video').srcObject = checkoutStream;
+  } catch (err) { toast('Camera access denied', 'error'); }
+}
+
+function closeCheckoutModal() {
+  document.getElementById('modal-checkout').classList.remove('open');
+  stopCheckoutCamera();
+}
+function stopCheckoutCamera() {
+  if (checkoutStream) { checkoutStream.getTracks().forEach(t => t.stop()); checkoutStream = null; }
+}
+
+async function doCheckout() {
+  if (!checkoutStream) { toast('Camera not ready', 'error'); return; }
+  const btn = document.getElementById('btn-pay');
+  btn.disabled = true; btn.textContent = 'Verifying…';
+  document.getElementById('checkout-status').textContent = 'Scanning face, please hold still…';
+  document.getElementById('scan-ring').classList.remove('hidden');
+
+  try {
+    const video  = document.getElementById('checkout-video');
+    const canvas = document.createElement('canvas');
+    canvas.width = 640; canvas.height = 480;
+    canvas.getContext('2d').drawImage(video, 0, 0, 640, 480);
+    const faceBlob    = await new Promise(r => canvas.toBlob(r, 'image/jpeg', 0.9));
+    const items       = Object.values(cart).map(i => ({ productId: i.product.id, quantity: i.qty }));
+    const checkoutData = JSON.stringify({ userId, items });
+    const fd = new FormData();
+    fd.append('data', checkoutData);
+    fd.append('face', faceBlob, 'face.jpg');
+
+    const res  = await fetch('/api/store/orders/checkout', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      body: fd
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json?.message || 'Checkout failed');
+
+    const order = json.data || json;
+    document.getElementById('scan-ring').classList.add('hidden');
+    closeCheckoutModal();
+    cart = {}; renderCart();
+    toast(`Order #${order.orderId} placed! New balance: ${fmtRp(order.remainingBalance)}`, 'success');
+    goPage('orders');
+  } catch (err) {
+    document.getElementById('scan-ring').classList.add('hidden');
+    document.getElementById('checkout-status').textContent = err.message;
+    btn.disabled = false; btn.textContent = 'Retry';
+    toast(err.message, 'error');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// ORDERS
+// ═══════════════════════════════════════════════════════════════════
+async function loadOrders() {
+  const tbody = document.getElementById('orders-tbody');
+  try {
+    const res    = await api('GET', `/api/store/orders/${userId}`);
+    const orders = res.data || res || [];
+    if (!orders.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted)">No orders yet.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = orders.map(o => `
+      <tr>
+        <td>#${o.orderId}</td>
+        <td>${o.createdAt ? new Date(o.createdAt).toLocaleDateString() : '—'}</td>
+        <td style="color:var(--gold)">${fmtRp(o.totalAmount)}</td>
+        <td><span class="status-badge ${o.status === 'SUCCESS' ? 'success' : 'failed'}">${o.status}</span></td>
+      </tr>
+    `).join('');
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--red)">${err.message}</td></tr>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════════
+function fmtRp(n) { return 'Rp ' + Number(n).toLocaleString('id-ID'); }
+function esc(s)   { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
+</body>
+</html>

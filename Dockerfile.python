@@ -1,0 +1,35 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# System dependencies for OpenCV and camera
+RUN apt-get update && apt-get install -y \
+    libgl1 \
+    libglib2.0-0 \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install CPU-only PyTorch first (avoids downloading 2.5GB CUDA version)
+RUN pip install --no-cache-dir torch==2.2.2 --index-url https://download.pytorch.org/whl/cpu
+
+# Install remaining Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy face service files
+COPY face_service.py .
+COPY haarcascade_frontalface_alt.xml .
+
+# Pre-download DeepFace models at build time so startup is instant
+COPY warmup.py .
+RUN python3 warmup.py
+
+# Face dataset directory (mounted as volume)
+RUN mkdir -p face_dataset
+
+EXPOSE 8000
+
+CMD ["python3", "face_service.py"]

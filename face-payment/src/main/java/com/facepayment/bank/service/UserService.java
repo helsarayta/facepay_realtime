@@ -9,6 +9,7 @@ import com.facepayment.bank.repository.BankAccountRepository;
 import com.facepayment.bank.repository.FacePaymentRepository;
 import com.facepayment.bank.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BankAccountRepository bankAccountRepository;
     private final FacePaymentRepository facePaymentRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public RegisterResponse register(RegisterRequest request) {
@@ -32,6 +34,7 @@ public class UserService {
                 .fullName(request.getFullName())
                 .email(request.getEmail())
                 .phone(request.getPhone())
+                .password(passwordEncoder.encode(request.getPassword()))
                 .build());
 
         String accountNumber = generateAccountNumber(user.getId());

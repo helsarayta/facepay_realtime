@@ -18,6 +18,7 @@ import com.facepayment.store.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class OrderService {
     private final FaceService faceService;
 
     @Transactional
-    public OrderResponse checkout(CheckoutRequest request) {
+    public OrderResponse checkout(CheckoutRequest request, MultipartFile faceImage) {
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("USER_NOT_FOUND: User not found"));
 
@@ -76,7 +77,7 @@ public class OrderService {
         }
 
         // Face verification
-        FaceService.FaceVerifyResult verifyResult = faceService.verifyFace(request.getUserId());
+        FaceService.FaceVerifyResult verifyResult = faceService.verifyFace(request.getUserId(), faceImage);
 
         // Save order first (captures intent regardless of result)
         Order order = orderRepository.save(Order.builder()

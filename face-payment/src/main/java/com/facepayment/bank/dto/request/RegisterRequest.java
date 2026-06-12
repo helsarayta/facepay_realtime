@@ -3,6 +3,7 @@ package com.facepayment.bank.dto.request;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.math.BigDecimal;
+import jakarta.validation.constraints.Size;
 
 @Data
 public class RegisterRequest {
@@ -16,6 +17,10 @@ public class RegisterRequest {
 
     @NotBlank(message = "Phone is required")
     private String phone;
+
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters")
+    private String password;
 
     @NotBlank(message = "Account type is required")
     @Pattern(regexp = "SAVINGS|CHECKING", message = "Account type must be SAVINGS or CHECKING")

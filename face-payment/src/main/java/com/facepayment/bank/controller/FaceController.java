@@ -7,8 +7,10 @@ import com.facepayment.bank.repository.UserRepository;
 import com.facepayment.bank.service.FaceService;
 import com.facepayment.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -21,8 +23,11 @@ public class FaceController {
     private final FacePaymentRepository facePaymentRepository;
     private final UserRepository userRepository;
 
-    @PostMapping("/activate/{userId}")
-    public ResponseEntity<ApiResponse<ActivateFaceResponse>> activate(@PathVariable Long userId) {
+    @PostMapping(value = "/activate/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<ActivateFaceResponse>> activate(
+            @PathVariable Long userId,
+            @RequestParam("files") MultipartFile[] files) {
+
         if (!userRepository.existsById(userId)) {
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("USER_NOT_FOUND", "User not found"));
@@ -31,12 +36,7 @@ public class FaceController {
         FacePayment facePayment = facePaymentRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("USER_NOT_FOUND: User not found"));
 
-        if ("ACTIVE".equals(facePayment.getStatus())) {
-            return ResponseEntity.badRequest()
-                    .body(ApiResponse.error("FACE_ALREADY_ACTIVE", "Face payment already activated"));
-        }
-
-        boolean enrolled = faceService.enrollFace(userId);
+        boolean enrolled = faceService.enrollFace(userId, files);
         if (!enrolled) {
             return ResponseEntity.internalServerError()
                     .body(ApiResponse.error("ENROLL_FAILED", "Face enrollment failed. Please try again."));

@@ -1,0 +1,32 @@
+# ── Secrets / deployment configs (contain JWT secret + DB password) ──
+docker-compose.yml
+docker-compose.vm.yml
+
+# ── Biometric face data (personal, sensitive PII) ──
+face_dataset/
+*.npy
+
+# ── IDE config (JetBrains) — also leaks server IP / DB connection ──
+.idea/
+*.iml
+
+# ── Claude Code local settings & skills (machine-specific) ──
+.claude/
+
+# ── Browser automation temp artifacts ──
+.playwright-cli/
+
+# ── Python ──
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# ── Maven / Java build output ──
+target/
+*.class
+
+# ── OS files ──
+.DS_Store
+Thumbs.db

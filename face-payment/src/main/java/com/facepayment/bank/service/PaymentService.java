@@ -9,6 +9,7 @@ import com.facepayment.bank.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class PaymentService {
     private final FaceService faceService;
 
     @Transactional
-    public PaymentResponse pay(PaymentRequest request) {
+    public PaymentResponse pay(PaymentRequest request, MultipartFile faceImage) {
         if (!userRepository.existsById(request.getUserId())) {
             throw new IllegalArgumentException("USER_NOT_FOUND: User not found");
         }
@@ -37,7 +38,7 @@ public class PaymentService {
             throw new IllegalArgumentException("INSUFFICIENT_BALANCE: Insufficient balance");
         }
 
-        FaceService.FaceVerifyResult result = faceService.verifyFace(request.getUserId());
+        FaceService.FaceVerifyResult result = faceService.verifyFace(request.getUserId(), faceImage);
         if (!result.match()) {
             throw new IllegalArgumentException("FACE_MISMATCH: Face verification failed. Transaction rejected.");
         }

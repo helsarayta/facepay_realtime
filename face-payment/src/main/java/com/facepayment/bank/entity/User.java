@@ -25,6 +25,9 @@ public class User {
     @Column(length = 20)
     private String phone;
 
+    @Column(nullable = false)
+    private String password;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

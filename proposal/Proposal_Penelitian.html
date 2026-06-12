@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Proposal Penelitian - Sistem Pembayaran Berbasis Pengenalan Wajah</title>
+<style>
+  @page {
+    size: A4;
+    margin: 3cm 3cm 3cm 4cm;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 12pt;
+    line-height: 1.5;
+    color: #000;
+    margin: 0;
+    text-align: justify;
+  }
+  h1, h2, h3, h4 { font-family: "Times New Roman", Times, serif; }
+  .bab {
+    page-break-before: always;
+  }
+  .bab-title {
+    text-align: center;
+    font-size: 14pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0 0 4pt 0;
+  }
+  .bab-subtitle {
+    text-align: center;
+    font-size: 14pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0 0 24pt 0;
+  }
+  h2.sec {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 18pt 0 6pt 0;
+  }
+  h3.subsec {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 14pt 0 6pt 0;
+  }
+  h4.subsubsec {
+    font-size: 12pt;
+    font-weight: bold;
+    font-style: italic;
+    margin: 12pt 0 4pt 0;
+  }
+  p { margin: 0 0 8pt 0; text-indent: 0; }
+  p.indent { text-indent: 1.27cm; }
+  ol, ul { margin: 4pt 0 8pt 0; padding-left: 1.4cm; }
+  li { margin-bottom: 4pt; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10pt 0;
+    font-size: 11pt;
+  }
+  table.bordered th, table.bordered td {
+    border: 1px solid #000;
+    padding: 5pt 7pt;
+    vertical-align: top;
+  }
+  table.bordered th {
+    background: #e8e8e8;
+    text-align: center;
+    font-weight: bold;
+  }
+  .caption {
+    text-align: center;
+    font-size: 11pt;
+    margin: 4pt 0 14pt 0;
+  }
+  .caption-top {
+    text-align: center;
+    font-size: 11pt;
+    margin: 14pt 0 4pt 0;
+    font-weight: normal;
+  }
+  .formula {
+    text-align: center;
+    margin: 10pt 0;
+    font-style: italic;
+  }
+  .formula .num {
+    float: right;
+    font-style: normal;
+  }
+  .figure {
+    margin: 14pt 0;
+    text-align: center;
+  }
+  /* ---- Title page ---- */
+  .cover {
+    height: 100%;
+    text-align: center;
+    page-break-after: always;
+  }
+  .cover .judul {
+    font-size: 14pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1.5;
+    margin: 30pt 30pt 24pt 30pt;
+  }
+  .cover .label {
+    font-size: 12pt;
+    margin: 6pt 0;
+  }
+  .cover .logo {
+    width: 300px;
+    height: auto;
+    margin: 26pt auto 20pt auto;
+    display: block;
+  }
+  .cover .identitas { font-size: 12pt; line-height: 1.6; margin-top: 18pt; }
+  .cover .instansi {
+    font-size: 13pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    line-height: 1.6;
+    margin-top: 36pt;
+  }
+  /* ---- Flow / arch diagram ---- */
+  .diagram {
+    border: 1px solid #999;
+    padding: 14pt;
+    margin: 12pt 0;
+    background: #fafafa;
+    font-family: "Courier New", monospace;
+    font-size: 9.5pt;
+    line-height: 1.35;
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .box-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    margin: 12pt 0;
+  }
+  .node {
+    border: 1.5px solid #333;
+    border-radius: 4px;
+    padding: 6pt 12pt;
+    background: #f0f0f0;
+    font-size: 10.5pt;
+    text-align: center;
+    max-width: 78%;
+  }
+  .node.dec {
+    background: #fff7df;
+    border-color: #b8860b;
+  }
+  .node.start { background: #e3f0e3; border-color: #2e6b2e; border-radius: 16px; }
+  .arrow { font-size: 13pt; line-height: 1; margin: 1pt 0; }
+  .keyword { font-style: italic; }
+  sub, sup { font-size: 8pt; }
+</style>
+</head>
+<body>
+
+<!-- ===================== HALAMAN SAMPUL ===================== -->
+<div class="cover">
+  <div class="label">PROPOSAL PENELITIAN / SKRIPSI</div>
+  <div class="judul">
+    Implementasi Sistem Pembayaran Berbasis Pengenalan Wajah
+    (Face Recognition) dengan Deteksi Anti-Spoofing
+    untuk Layanan Perbankan Digital
+  </div>
+
+  <img class="logo" src="unaki_logo_final.png" alt="Logo Universitas AKI">
+
+  <div class="identitas">
+    <div>Disusun oleh:</div>
+    <div><strong>Heydie Zuliansyah</strong></div>
+    <div>NIM: 223250047</div>
+  </div>
+
+  <div class="instansi">
+    Program Studi Teknik Informatika<br>
+    Fakultas Teknik dan Informatika<br>
+    Universitas AKI<br>
+    Semarang<br>
+    2026
+  </div>
+</div>
+
+<!-- ===================== BAB I ===================== -->
+<div class="bab">
+  <div class="bab-title">BAB I</div>
+  <div class="bab-subtitle">Pendahuluan</div>
+
+  <h2 class="sec">1.1 Latar Belakang</h2>
+  <p class="indent">
+    Transformasi digital pada sektor keuangan telah mengubah secara mendasar
+    cara masyarakat melakukan transaksi pembayaran. Layanan perbankan digital
+    saat ini menuntut proses transaksi yang cepat, praktis, dan aman tanpa
+    bergantung pada perangkat fisik. Metode pembayaran konvensional yang
+    mengandalkan kartu (debit/kredit), Personal Identification Number (PIN),
+    maupun kata sandi (<span class="keyword">password</span>) masih
+    menghadapi berbagai persoalan keamanan, antara lain pencurian kartu,
+    <span class="keyword">skimming</span>, <span class="keyword">phishing</span>,
+    rekayasa sosial, serta kebocoran kredensial. Faktor otentikasi berbasis
+    kepemilikan (<span class="keyword">something you have</span>) dan
+    pengetahuan (<span class="keyword">something you know</span>) memiliki
+    kelemahan mendasar karena dapat hilang, dilupakan, dicuri, atau dibagikan
+    kepada pihak lain.
+  </p>
+  <p class="indent">
+    Biometrik menawarkan paradigma otentikasi yang berbeda, yaitu otentikasi
+    berbasis karakteristik melekat pada individu
+    (<span class="keyword">something you are</span>). Di antara berbagai
+    modalitas biometrik, wajah merupakan modalitas yang paling alami dan tidak
+    invasif (<span class="keyword">non-intrusive</span>) karena dapat diperoleh
+    dari jarak tertentu hanya menggunakan kamera, tanpa kontak fisik, dan tanpa
+    perangkat sensor khusus. Pengenalan wajah (<span class="keyword">face
+    recognition</span>) memungkinkan pengguna melakukan otentikasi transaksi
+    cukup dengan menghadapkan wajah ke kamera, sehingga proses pembayaran
+    menjadi lebih ringkas dan tidak memerlukan kartu maupun penghafalan PIN.
+  </p>
+  <p class="indent">
+    Meskipun demikian, sistem pengenalan wajah memiliki kerentanan terhadap
+    serangan presentasi (<span class="keyword">presentation attack</span>) atau
+    yang lebih dikenal dengan istilah <span class="keyword">spoofing</span>,
+    yaitu upaya pemalsuan identitas dengan menyajikan artefak wajah palsu di
+    depan kamera. Bentuk serangan tersebut dapat berupa foto cetak
+    (<span class="keyword">print attack</span>), pemutaran video atau foto pada
+    layar gawai (<span class="keyword">replay attack</span>), maupun penggunaan
+    topeng tiga dimensi (<span class="keyword">mask attack</span>). Pada konteks
+    pembayaran perbankan, kerentanan ini berakibat langsung pada kerugian
+    finansial, sehingga sistem pengenalan wajah untuk pembayaran wajib
+    dilengkapi mekanisme deteksi kehidupan (<span class="keyword">liveness
+    detection</span>) atau anti-spoofing yang mampu membedakan wajah asli yang
+    hidup dari artefak tiruan.
+  </p>
+  <p class="indent">
+    Perkembangan bidang kecerdasan buatan (<span class="keyword">artificial
+    intelligence</span>), khususnya visi komputer (<span class="keyword">computer
+    vision</span>) dan pembelajaran mendalam (<span class="keyword">deep
+    learning</span>), telah menyediakan beragam algoritma untuk deteksi wajah,
+    ekstraksi fitur, pencocokan identitas, hingga deteksi anti-spoofing dengan
+    akurasi yang terus meningkat. Ketersediaan pustaka sumber terbuka
+    (<span class="keyword">open source</span>) seperti OpenCV dan DeepFace
+    memungkinkan algoritma-algoritma tersebut diintegrasikan ke dalam aplikasi
+    nyata secara efisien.
+  </p>
+  <p class="indent">
+    Berdasarkan latar belakang tersebut, penelitian ini mengusulkan
+    perancangan dan implementasi sebuah prototipe sistem pembayaran berbasis
+    pengenalan wajah yang terintegrasi dengan layanan perbankan digital. Sistem
+    yang diusulkan menggabungkan algoritma deteksi wajah Haar Cascade,
+    ekstraksi fitur wajah berbasis pembelajaran mendalam (<span class="keyword">deep
+    learning</span>) menggunakan model FaceNet yang menghasilkan
+    <span class="keyword">embedding</span> 128-dimensi, pencocokan wajah dengan
+    metode <span class="keyword">K-Nearest Neighbors</span> (KNN) berbasis jarak
+    kosinus (<span class="keyword">cosine distance</span>), serta modul
+    anti-spoofing berbasis <span class="keyword">Convolutional Neural
+    Network</span> (CNN). Penelitian ini menitikberatkan kajian pada aspek visi
+    komputer dan pengenalan wajah, yaitu dari sisi algoritma, alur pemrosesan
+    citra, serta evaluasi kinerja dan akurasi sistem.
+  </p>
+
+  <h2 class="sec">1.2 Rumusan Masalah</h2>
+  <p class="indent">
+    Berdasarkan latar belakang yang telah diuraikan, rumusan masalah dalam
+    penelitian ini adalah sebagai berikut:
+  </p>
+  <ol>
+    <li>Bagaimana merancang dan membangun sistem pembayaran perbankan digital
+        yang menggunakan pengenalan wajah sebagai metode otentikasi
+        transaksi?</li>
+    <li>Bagaimana menerapkan algoritma deteksi wajah dan pencocokan wajah untuk
+        proses pendaftaran (<span class="keyword">enrollment</span>) dan
+        verifikasi identitas pengguna?</li>
+    <li>Bagaimana mengintegrasikan modul anti-spoofing untuk mencegah serangan
+        pemalsuan wajah pada saat verifikasi pembayaran?</li>
+    <li>Bagaimana tingkat akurasi dan kinerja sistem yang dihasilkan diukur
+        menggunakan metrik <span class="keyword">False Acceptance Rate</span>
+        (FAR), <span class="keyword">False Rejection Rate</span> (FRR), akurasi,
+        serta waktu komputasi?</li>
+  </ol>
+
+  <h2 class="sec">1.3 Batasan Masalah</h2>
+  <p class="indent">
+    Agar penelitian terarah dan tidak meluas, ditetapkan batasan masalah
+    sebagai berikut:
+  </p>
+  <ol>
+    <li>Penelitian menghasilkan sebuah prototipe (<span class="keyword">proof
+        of concept</span>) sistem pembayaran berbasis wajah, bukan sistem siap
+        produksi berskala besar.</li>
+    <li>Deteksi wajah menggunakan metode Haar Cascade Classifier, ekstraksi
+        fitur menggunakan model FaceNet (<span class="keyword">embedding</span>
+        128-dimensi melalui pustaka DeepFace), sedangkan pencocokan wajah
+        menggunakan algoritma KNN berbasis jarak kosinus terhadap
+        <span class="keyword">embedding</span> tersebut.</li>
+    <li>Modul anti-spoofing menggunakan model MiniFASNet melalui pustaka
+        DeepFace dan dibatasi pada deteksi spoofing pasif berbasis satu bingkai
+        citra (<span class="keyword">single-frame passive liveness</span>).</li>
+    <li>Citra wajah ditangkap melalui kamera web pada peramban
+        (<span class="keyword">browser</span>) pengguna dan pengujian dilakukan
+        pada kondisi pencahayaan yang relatif terkendali.</li>
+    <li>Sistem mengasumsikan satu pengguna memiliki satu berkas data wajah;
+        pendaftaran ulang akan menggantikan data wajah sebelumnya.</li>
+    <li>Aspek regulasi perbankan, kepatuhan hukum perlindungan data pribadi,
+        serta integrasi dengan sistem pembayaran nasional tidak dibahas secara
+        mendalam dan hanya disinggung sebagai pertimbangan.</li>
+    <li>Jumlah responden uji terbatas pada lingkup penelitian skala
+        laboratorium.</li>
+  </ol>
+
+  <h2 class="sec">1.4 Tujuan Penelitian</h2>
+  <p class="indent">
+    Tujuan yang ingin dicapai dalam penelitian ini adalah:
+  </p>
+  <ol>
+    <li>Merancang dan membangun prototipe sistem pembayaran perbankan digital
+        dengan pengenalan wajah sebagai metode otentikasi transaksi.</li>
+    <li>Menerapkan algoritma deteksi wajah Haar Cascade, ekstraksi
+        <span class="keyword">embedding</span> wajah dengan model FaceNet, serta
+        algoritma pencocokan wajah KNN berbasis jarak kosinus pada proses
+        pendaftaran dan verifikasi pengguna.</li>
+    <li>Mengintegrasikan modul anti-spoofing berbasis CNN untuk meningkatkan
+        ketahanan sistem terhadap serangan presentasi.</li>
+    <li>Mengukur dan menganalisis akurasi serta kinerja sistem yang dihasilkan
+        berdasarkan metrik evaluasi yang telah ditetapkan.</li>
+  </ol>
+
+  <h2 class="sec">1.5 Manfaat Penelitian</h2>
+  <h3 class="subsec">1.5.1 Manfaat Teoritis</h3>
+  <ol>
+    <li>Memberikan kontribusi kajian penerapan algoritma visi komputer dan
+        pengenalan wajah pada domain sistem pembayaran.</li>
+    <li>Menjadi bahan referensi bagi penelitian lanjutan terkait biometrik
+        wajah dan deteksi anti-spoofing.</li>
+  </ol>
+  <h3 class="subsec">1.5.2 Manfaat Praktis</h3>
+  <ol>
+    <li>Menyediakan prototipe alternatif metode pembayaran yang lebih praktis
+        karena tidak memerlukan kartu fisik maupun PIN.</li>
+    <li>Memberikan gambaran arsitektur sistem pembayaran berbasis wajah yang
+        dapat dijadikan acuan pengembangan oleh industri keuangan.</li>
+    <li>Meningkatkan kesadaran terhadap pentingnya mekanisme anti-spoofing pada
+        sistem otentikasi biometrik.</li>
+  </ol>
+</div>
+
+<!-- ===================== BAB II ===================== -->
+<div class="bab">
+  <div class="bab-title">BAB II</div>
+  <div class="bab-subtitle">Tinjauan Pustaka</div>
+
+  <h2 class="sec">2.1 Penelitian Terkait</h2>
+  <p class="indent">
+    Pengembangan sistem pengenalan wajah dan anti-spoofing telah menjadi topik
+    penelitian yang intensif dalam dua dekade terakhir. Bagian ini menyajikan
+    sejumlah penelitian dan karya ilmiah terdahulu yang menjadi landasan serta
+    pembanding bagi penelitian ini.
+  </p>
+  <p class="indent">
+    Viola dan Jones (2001) memperkenalkan kerangka kerja deteksi objek secara
+    cepat menggunakan fitur Haar yang dipercepat oleh konsep
+    <span class="keyword">integral image</span> serta seleksi fitur dengan
+    algoritma AdaBoost yang disusun dalam struktur kaskade
+    (<span class="keyword">cascade</span>). Metode ini menjadi tonggak penting
+    deteksi wajah secara <span class="keyword">real-time</span> dan hingga kini
+    masih banyak digunakan karena ringan secara komputasi.
+  </p>
+  <p class="indent">
+    Taigman dkk. (2014) melalui karya DeepFace menunjukkan bahwa pendekatan
+    pembelajaran mendalam mampu mendekati kemampuan manusia dalam verifikasi
+    wajah. Schroff dkk. (2015) pada FaceNet mengusulkan pemetaan citra wajah ke
+    ruang fitur (<span class="keyword">embedding</span>) berdimensi 128
+    menggunakan <span class="keyword">triplet loss</span>, sehingga jarak antar
+    fitur dapat digunakan langsung untuk verifikasi dan pengelompokan.
+    Pendekatan inilah yang diadopsi pada penelitian ini sebagai pengganti
+    representasi piksel mentah, dengan jarak kosinus
+    (<span class="keyword">cosine distance</span>) sebagai ukuran kemiripan
+    antar <span class="keyword">embedding</span>. Deng dkk. (2019)
+    menyempurnakan pendekatan tersebut melalui ArcFace dengan fungsi
+    <span class="keyword">additive angular margin loss</span> yang menghasilkan
+    fitur dengan daya pisah antar kelas yang lebih tinggi.
+  </p>
+  <p class="indent">
+    Pada ranah anti-spoofing, penelitian Silent Face Anti-Spoofing
+    mengembangkan model ringan MiniFASNet yang mampu mendeteksi serangan
+    presentasi hanya dari satu bingkai citra tanpa memerlukan interaksi
+    pengguna (<span class="keyword">passive liveness</span>). Pendekatan ini
+    memanfaatkan informasi tekstur dan kedalaman semu dari citra untuk
+    membedakan wajah asli dari foto maupun tayangan layar. Model inilah yang
+    diadopsi pustaka DeepFace dan digunakan dalam penelitian ini.
+  </p>
+  <p class="indent">
+    Cover dan Hart (1967) merumuskan metode klasifikasi
+    <span class="keyword">Nearest Neighbor</span> yang menjadi dasar algoritma
+    KNN. Meskipun sederhana, metode ini terbukti efektif untuk pencocokan pola
+    dan banyak digunakan sebagai <span class="keyword">baseline</span> pada
+    sistem pengenalan wajah berbasis representasi citra.
+  </p>
+  <p class="indent">
+    Ringkasan perbandingan penelitian terkait disajikan pada Tabel 2.1.
+  </p>
+
+  <div class="caption-top">Tabel 2.1 Ringkasan Penelitian Terkait</div>
+  <table class="bordered">
+    <thead>
+      <tr>
+        <th style="width:20%">Peneliti (Tahun)</th>
+        <th style="width:34%">Fokus / Metode</th>
+        <th style="width:46%">Relevansi dengan Penelitian</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Viola &amp; Jones (2001)</td>
+        <td>Deteksi objek/wajah dengan fitur Haar, integral image, AdaBoost,
+            dan struktur kaskade.</td>
+        <td>Menjadi algoritma deteksi wajah yang diadopsi pada tahap lokalisasi
+            wajah dalam penelitian ini.</td>
+      </tr>
+      <tr>
+        <td>Taigman dkk. (2014)</td>
+        <td>DeepFace, verifikasi wajah berbasis deep learning.</td>
+        <td>Menunjukkan potensi deep learning; pustaka DeepFace digunakan untuk
+            modul anti-spoofing.</td>
+      </tr>
+      <tr>
+        <td>Schroff dkk. (2015)</td>
+        <td>FaceNet, embedding wajah 128-dimensi dengan triplet loss.</td>
+        <td>Model ekstraksi fitur wajah yang digunakan dalam penelitian ini
+            (melalui pustaka DeepFace).</td>
+      </tr>
+      <tr>
+        <td>Deng dkk. (2019)</td>
+        <td>ArcFace, additive angular margin loss.</td>
+        <td>Acuan untuk pengembangan lanjutan pencocokan wajah berakurasi
+            tinggi.</td>
+      </tr>
+      <tr>
+        <td>Silent Face Anti-Spoofing</td>
+        <td>MiniFASNet, deteksi spoofing pasif satu bingkai.</td>
+        <td>Model yang digunakan langsung sebagai modul deteksi anti-spoofing
+            sistem.</td>
+      </tr>
+      <tr>
+        <td>Cover &amp; Hart (1967)</td>
+        <td>Klasifikasi Nearest Neighbor.</td>
+        <td>Dasar teori algoritma KNN untuk pencocokan wajah pada penelitian
+            ini.</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="indent">
+    Posisi penelitian ini terhadap karya-karya terdahulu adalah pada aspek
+    integrasi: penelitian ini tidak sekadar menguji satu algoritma secara
+    terpisah, melainkan menggabungkan deteksi wajah, pencocokan, dan
+    anti-spoofing ke dalam satu alur sistem pembayaran perbankan digital yang
+    utuh, lengkap dengan arsitektur perangkat lunak dan evaluasi kinerja
+    menyeluruh.
+  </p>
+
+  <h2 class="sec">2.2 Landasan Teori</h2>
+
+  <h3 class="subsec">2.2.1 Visi Komputer (Computer Vision)</h3>
+  <p class="indent">
+    Visi komputer adalah cabang kecerdasan buatan yang bertujuan memberikan
+    kemampuan kepada komputer untuk memperoleh, memproses, menganalisis, dan
+    memahami citra digital sehingga dapat menghasilkan informasi atau keputusan.
+    Dalam konteks pengenalan wajah, visi komputer berperan pada tahap akuisisi
+    citra, prapemrosesan (<span class="keyword">preprocessing</span>),
+    lokalisasi objek wajah, ekstraksi fitur, hingga klasifikasi identitas.
+  </p>
+
+  <h3 class="subsec">2.2.2 Citra Digital</h3>
+  <p class="indent">
+    Citra digital direpresentasikan sebagai matriks dua dimensi yang
+    elemen-elemennya disebut piksel. Pada citra berwarna, setiap piksel terdiri
+    atas tiga kanal warna. OpenCV secara <span class="keyword">default</span>
+    menyimpan citra dalam format BGR (<span class="keyword">Blue-Green-Red</span>).
+    Representasi piksel mentah hasil <span class="keyword">flatten</span>
+    sebenarnya dapat langsung dijadikan vektor fitur (mis. citra 100&times;100
+    dengan 3 kanal menghasilkan vektor 30.000 elemen), namun representasi ini
+    sangat sensitif terhadap pencahayaan, pose, dan latar belakang sehingga
+    kurang diskriminatif terhadap identitas wajah. Untuk alasan tersebut,
+    penelitian ini tidak menggunakan piksel mentah sebagai fitur, melainkan
+    <span class="keyword">embedding</span> 128-dimensi yang dihasilkan oleh
+    model FaceNet (lihat 2.2.5).
+  </p>
+
+  <h3 class="subsec">2.2.3 Deteksi Wajah dengan Haar Cascade</h3>
+  <p class="indent">
+    Deteksi wajah adalah proses menentukan ada atau tidaknya wajah pada citra
+    serta lokasinya. Metode Haar Cascade yang diperkenalkan Viola dan Jones
+    bekerja dengan tiga gagasan utama:
+  </p>
+  <ol>
+    <li><strong>Fitur Haar.</strong> Fitur dihitung dari selisih jumlah
+        intensitas piksel pada wilayah persegi panjang yang bersebelahan, yang
+        merepresentasikan pola tepi, garis, dan kontras khas wajah (misalnya
+        wilayah mata lebih gelap daripada pipi).</li>
+    <li><strong>Integral Image.</strong> Untuk mempercepat perhitungan, citra
+        diubah menjadi representasi <span class="keyword">integral image</span>,
+        di mana setiap titik menyimpan jumlah kumulatif intensitas. Dengan
+        representasi ini, jumlah intensitas wilayah persegi panjang apa pun
+        dapat dihitung hanya dengan empat operasi penjumlahan, sebagaimana
+        Persamaan (2.1):</li>
+  </ol>
+  <p class="formula">
+    S = ii(D) &minus; ii(B) &minus; ii(C) + ii(A)
+    <span class="num">(2.1)</span>
+  </p>
+  <p class="indent">
+    dengan <em>ii</em> adalah nilai integral image pada titik sudut wilayah
+    (A, B, C, D).
+  </p>
+  <ol start="3">
+    <li><strong>AdaBoost dan Kaskade.</strong> Dari ratusan ribu kemungkinan
+        fitur, algoritma AdaBoost memilih fitur paling diskriminatif dan
+        menggabungkannya menjadi pengklasifikasi kuat. Pengklasifikasi disusun
+        dalam struktur kaskade bertingkat: wilayah citra yang jelas bukan wajah
+        ditolak pada tahap awal sehingga komputasi menjadi efisien dan mendekati
+        <span class="keyword">real-time</span>.</li>
+  </ol>
+  <p class="indent">
+    Pada penelitian ini digunakan berkas terlatih
+    <span class="keyword">haarcascade_frontalface_alt.xml</span> dari OpenCV.
+    Citra masukan dikonversi ke aras keabuan
+    (<span class="keyword">grayscale</span>) sebelum deteksi, dan jika
+    terdeteksi lebih dari satu wajah maka dipilih wajah dengan luas
+    <span class="keyword">bounding box</span> terbesar.
+  </p>
+
+  <h3 class="subsec">2.2.4 Pengenalan Wajah (Face Recognition)</h3>
+  <p class="indent">
+    Pengenalan wajah adalah proses mengidentifikasi atau memverifikasi
+    identitas seseorang berdasarkan citra wajahnya. Terdapat dua mode utama:
+    <span class="keyword">identification</span> (1:N, mencari kecocokan pada
+    basis data) dan <span class="keyword">verification</span> (1:1,
+    memastikan kecocokan terhadap satu identitas klaim). Sistem pembayaran pada
+    penelitian ini menerapkan mode verifikasi, yaitu mencocokkan wajah pengguna
+    pada saat transaksi dengan data wajah yang telah didaftarkan oleh akun yang
+    bersangkutan.
+  </p>
+
+  <h3 class="subsec">2.2.5 FaceNet dan Face Embedding</h3>
+  <p class="indent">
+    FaceNet (Schroff dkk., 2015) adalah jaringan saraf konvolusional dalam
+    (<span class="keyword">deep CNN</span>) yang memetakan citra wajah ke ruang
+    vektor berdimensi 128 yang dinormalisasi-L2
+    (<em>L2-normalized embedding</em>). Model dilatih menggunakan fungsi rugi
+    <span class="keyword">triplet loss</span> yang mendorong pasangan citra
+    berasal dari individu yang sama untuk berdekatan dalam ruang fitur, dan
+    sebaliknya menjauhkan pasangan dari individu yang berbeda. Karakteristik
+    inilah yang menjadikan <span class="keyword">embedding</span> FaceNet
+    sangat diskriminatif terhadap identitas dibandingkan representasi piksel
+    mentah. Pada penelitian ini, FaceNet diakses melalui pustaka DeepFace
+    dengan pemanggilan <span class="keyword">DeepFace.represent(model_name='Facenet')</span>,
+    dan tiap citra wajah hasil deteksi diubah menjadi satu vektor 128-dimensi
+    yang disimpan sebagai sampel fitur pengguna.
+  </p>
+
+  <h3 class="subsec">2.2.6 Algoritma K-Nearest Neighbors (KNN)</h3>
+  <p class="indent">
+    KNN adalah algoritma pembelajaran terbimbing berbasis instans
+    (<span class="keyword">instance-based learning</span>) yang
+    mengklasifikasikan data uji berdasarkan kedekatannya terhadap data latih.
+    Prinsip kerjanya: hitung jarak data uji terhadap seluruh data latih,
+    pilih sejumlah <em>k</em> tetangga terdekat, lalu tentukan keputusan
+    berdasarkan tetangga tersebut. Pada penelitian ini, setiap pengguna
+    memiliki sekumpulan <span class="keyword">embedding</span> hasil
+    pendaftaran; pada saat verifikasi, jarak antara <span class="keyword">embedding</span>
+    wajah uji dan seluruh <span class="keyword">embedding</span> terdaftar
+    dihitung, kemudian diambil rata-rata dari <em>k</em> = 5 jarak terkecil
+    sebagai skor kemiripan.
+  </p>
+
+  <h3 class="subsec">2.2.7 Jarak Kosinus (Cosine Distance)</h3>
+  <p class="indent">
+    Karena <span class="keyword">embedding</span> FaceNet bersifat
+    dinormalisasi (memiliki panjang vektor 1), informasi identitas terkandung
+    pada <em>arah</em> vektor, bukan pada besarannya. Ukuran kemiripan yang
+    paling tepat untuk vektor jenis ini adalah jarak kosinus, yang mengukur
+    sudut antara dua vektor. Untuk dua vektor <strong>v</strong><sub>1</sub>
+    dan <strong>v</strong><sub>2</sub>, jarak kosinus didefinisikan pada
+    Persamaan (2.2):
+  </p>
+  <p class="formula">
+    d<sub>cos</sub>(<strong>v</strong><sub>1</sub>, <strong>v</strong><sub>2</sub>) =
+    1 &minus;
+    ( <strong>v</strong><sub>1</sub> &middot; <strong>v</strong><sub>2</sub> ) /
+    ( &Vert;<strong>v</strong><sub>1</sub>&Vert; &middot; &Vert;<strong>v</strong><sub>2</sub>&Vert; )
+    <span class="num">(2.2)</span>
+  </p>
+  <p class="indent">
+    Nilai jarak kosinus berada pada rentang [0, 2], dengan 0 berarti dua vektor
+    sepenuhnya searah (sangat mirip) dan nilai yang lebih besar menandakan arah
+    yang semakin berbeda. Keputusan kecocokan ditentukan dengan membandingkan
+    rata-rata jarak terhadap nilai ambang
+    (<span class="keyword">threshold</span>) yang direkomendasikan DeepFace
+    untuk FaceNet, yaitu <em>T</em> = 0,40.
+  </p>
+
+  <h3 class="subsec">2.2.8 Deteksi Anti-Spoofing dan Liveness Detection</h3>
+  <p class="indent">
+    <span class="keyword">Liveness detection</span> bertujuan memastikan bahwa
+    wajah yang disajikan ke kamera berasal dari individu hidup yang sebenarnya,
+    bukan artefak tiruan. Pendekatan terbagi menjadi dua: aktif, yang menuntut
+    interaksi pengguna (misalnya mengedipkan mata atau menoleh), dan pasif,
+    yang menganalisis citra tanpa interaksi. Penelitian ini menggunakan
+    pendekatan pasif berbasis satu bingkai citra dengan model MiniFASNet melalui
+    pustaka DeepFace. Model ini menganalisis ciri tekstur, pantulan cahaya
+    (<span class="keyword">reflectance</span>), serta pola Moir&eacute; yang
+    umum muncul pada citra hasil cetak atau tayangan layar, lalu menghasilkan
+    skor keaslian (<span class="keyword">antispoof score</span>) dan label
+    apakah wajah dianggap nyata (<span class="keyword">is_real</span>).
+  </p>
+
+  <h3 class="subsec">2.2.9 Convolutional Neural Network (CNN)</h3>
+  <p class="indent">
+    CNN adalah arsitektur jaringan saraf tiruan yang dirancang untuk mengolah
+    data berstruktur grid seperti citra. CNN terdiri atas lapisan konvolusi
+    yang mengekstraksi fitur secara hierarkis, lapisan <span class="keyword">
+    pooling</span> untuk reduksi dimensi, dan lapisan terhubung penuh
+    (<span class="keyword">fully connected</span>) untuk klasifikasi. MiniFASNet
+    yang digunakan pada modul anti-spoofing merupakan varian CNN ringan yang
+    memanfaatkan konvolusi terpisah secara kedalaman
+    (<span class="keyword">depthwise separable convolution</span>) sehingga
+    hemat komputasi dan sesuai untuk diterapkan secara langsung pada layanan.
+  </p>
+
+  <h3 class="subsec">2.2.10 Teknologi Pendukung Pengembangan Sistem</h3>
+  <p class="indent">
+    Beberapa teknologi perangkat lunak yang digunakan dalam membangun sistem
+    dirangkum pada Tabel 2.2.
+  </p>
+  <div class="caption-top">Tabel 2.2 Teknologi Pendukung Sistem</div>
+  <table class="bordered">
+    <thead>
+      <tr>
+        <th style="width:24%">Teknologi</th>
+        <th style="width:76%">Peran dalam Sistem</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Python &amp; FastAPI</td>
+          <td>Membangun layanan wajah (<span class="keyword">face service</span>)
+              berupa REST API untuk pendaftaran dan verifikasi wajah.</td></tr>
+      <tr><td>OpenCV</td>
+          <td>Pustaka visi komputer untuk pembacaan citra, konversi warna,
+              deteksi wajah Haar Cascade, dan pemotongan citra wajah.</td></tr>
+      <tr><td>DeepFace</td>
+          <td>Pustaka pengenalan wajah yang menyediakan model
+              <span class="keyword">embedding</span> FaceNet untuk ekstraksi
+              fitur wajah serta model anti-spoofing MiniFASNet.</td></tr>
+      <tr><td>NumPy</td>
+          <td>Komputasi numerik, perhitungan jarak kosinus, dan penyimpanan
+              <span class="keyword">embedding</span> wajah dalam berkas
+              <span class="keyword">.npy</span>.</td></tr>
+      <tr><td>Spring Boot</td>
+          <td>Membangun layanan inti perbankan (otentikasi, akun, pembayaran)
+              dan menyajikan antarmuka pengguna.</td></tr>
+      <tr><td>PostgreSQL</td>
+          <td>Basis data relasional untuk menyimpan data pengguna, akun, dan
+              transaksi.</td></tr>
+      <tr><td>JSON Web Token (JWT)</td>
+          <td>Mekanisme otentikasi sesi pengguna pada layer aplikasi.</td></tr>
+      <tr><td>Docker</td>
+          <td>Kontainerisasi layanan untuk kemudahan penyebaran
+              (<span class="keyword">deployment</span>).</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===================== BAB III ===================== -->
+<div class="bab">
+  <div class="bab-title">BAB III</div>
+  <div class="bab-subtitle">Metodologi Penelitian</div>
+
+  <h2 class="sec">3.1 Metode Penelitian</h2>
+  <p class="indent">
+    Penelitian ini menggunakan metode penelitian dan pengembangan
+    (<span class="keyword">research and development</span>) dengan pendekatan
+    eksperimental. Sistem dibangun secara iteratif, kemudian dievaluasi melalui
+    serangkaian eksperimen untuk mengukur akurasi dan kinerja algoritma visi
+    komputer yang diterapkan. Tahapan penelitian secara umum terdiri atas studi
+    literatur, pengumpulan data, perancangan sistem, implementasi, pengujian,
+    serta analisis hasil.
+  </p>
+
+  <h2 class="sec">3.2 Metode Pengumpulan Data</h2>
+  <h3 class="subsec">3.2.1 Studi Literatur</h3>
+  <p class="indent">
+    Studi literatur dilakukan dengan menelaah buku, jurnal ilmiah, artikel
+    konferensi, serta dokumentasi pustaka perangkat lunak yang berkaitan dengan
+    visi komputer, pengenalan wajah, model <span class="keyword">embedding</span>
+    FaceNet, algoritma KNN dengan jarak kosinus, serta deteksi anti-spoofing.
+    Tahap ini menjadi dasar pemilihan algoritma dan perancangan eksperimen.
+  </p>
+  <h3 class="subsec">3.2.2 Pengumpulan Data Citra Wajah</h3>
+  <p class="indent">
+    Data utama penelitian adalah citra wajah yang diperoleh secara langsung
+    (<span class="keyword">primary data</span>) melalui kamera web pada peramban.
+    Pengumpulan data dilakukan pada dua tahap:
+  </p>
+  <ol>
+    <li><strong>Data pendaftaran (enrollment).</strong> Untuk setiap responden,
+        sistem menangkap 30 bingkai citra secara berurutan dengan jeda sekitar
+        200 milidetik. Setiap bingkai diproses dengan deteksi wajah, kemudian
+        wajah yang berhasil terdeteksi diteruskan ke model FaceNet untuk
+        menghasilkan <span class="keyword">embedding</span> 128-dimensi.
+        Sistem mensyaratkan minimal 3 <span class="keyword">embedding</span>
+        valid agar pendaftaran berhasil &mdash; jumlah yang lebih sedikit
+        dibanding pendekatan berbasis piksel karena
+        <span class="keyword">embedding</span> FaceNet jauh lebih diskriminatif.
+        Kumpulan <span class="keyword">embedding</span> disimpan sebagai matriks
+        berukuran (<em>N</em> &times; 128) dalam berkas
+        <span class="keyword">.npy</span> bernama sesuai
+        <span class="keyword">user_id</span>.</li>
+    <li><strong>Data uji (verification).</strong> Citra wajah uji ditangkap
+        pada saat skenario pengujian, mencakup citra wajah asli pengguna sah,
+        citra wajah pengguna lain (<span class="keyword">impostor</span>), serta
+        citra serangan spoofing berupa foto cetak dan tayangan layar.</li>
+  </ol>
+  <p class="indent">
+    Rencana komposisi data pengujian disajikan pada Tabel 3.1.
+  </p>
+  <div class="caption-top">Tabel 3.1 Rencana Komposisi Data Pengujian</div>
+  <table class="bordered">
+    <thead>
+      <tr>
+        <th style="width:34%">Jenis Data</th>
+        <th style="width:30%">Hasil yang Diharapkan</th>
+        <th style="width:36%">Keterangan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Wajah asli pemilik akun (genuine)</td>
+          <td>Diterima (match = true)</td>
+          <td>Menguji True Acceptance / sensitivitas sistem.</td></tr>
+      <tr><td>Wajah pengguna lain (impostor)</td>
+          <td>Ditolak (match = false)</td>
+          <td>Menguji ketahanan terhadap kesalahan penerimaan.</td></tr>
+      <tr><td>Foto cetak wajah pemilik akun</td>
+          <td>Ditolak (liveness_failed)</td>
+          <td>Menguji modul anti-spoofing terhadap print attack.</td></tr>
+      <tr><td>Tayangan wajah pada layar gawai</td>
+          <td>Ditolak (liveness_failed)</td>
+          <td>Menguji modul anti-spoofing terhadap replay attack.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sec">3.3 Arsitektur Sistem yang Diusulkan</h2>
+  <p class="indent">
+    Sistem dirancang dengan arsitektur berorientasi layanan yang terdiri atas
+    tiga komponen utama: (1) antarmuka pengguna berbasis peramban yang
+    menangani penangkapan citra dari kamera web; (2) layanan inti perbankan
+    (Spring Boot) yang menangani otentikasi, pengelolaan akun, dan transaksi;
+    serta (3) layanan wajah (Python/FastAPI) yang menjalankan algoritma visi
+    komputer untuk pendaftaran dan verifikasi wajah. Basis data PostgreSQL
+    menyimpan data pengguna dan transaksi, sedangkan data fitur wajah disimpan
+    sebagai berkas <span class="keyword">.npy</span> pada layanan wajah.
+    Arsitektur sistem ditunjukkan pada Gambar 3.1.
+  </p>
+
+  <div class="figure">
+    <div class="diagram">  +-------------------------------------------------------------+
+  |        ANTARMUKA PENGGUNA (Browser + Kamera Web)            |
+  |   Penangkapan citra wajah  |  Pendaftaran  |  Pembayaran    |
+  +------------------------------+------------------------------+
+                                 |  HTTPS (multipart/form-data)
+                                 v
+  +-------------------------------------------------------------+
+  |        LAYANAN INTI PERBANKAN  (Spring Boot, port 8080)     |
+  |   Otentikasi JWT | Akun & Saldo | Transaksi | Orkestrasi    |
+  +----------------+----------------------------+---------------+
+                   |                            |
+        JDBC       |                            |  REST API
+                   v                            v
+  +-------------------------+   +-------------------------------+
+  |   BASIS DATA PostgreSQL |   |  LAYANAN WAJAH (FastAPI:8000) |
+  |   Pengguna | Akun |     |   |  Haar -> Anti-Spoofing ->     |
+  |   Transaksi             |   |  FaceNet Embedding -> KNN     |
+  +-------------------------+   |  (Cosine Distance)            |
+                                +---------------+---------------+
+                                                |
+                                                v
+                                +-------------------------------+
+                                |  Penyimpanan embedding wajah  |
+                                |  face_dataset/{user_id}.npy   |
+                                |  matriks (N x 128)            |
+                                +-------------------------------+</div>
+    <div class="caption">Gambar 3.1 Arsitektur Sistem yang Diusulkan</div>
+  </div>
+
+  <h2 class="sec">3.4 Rancangan Eksperimen dan Algoritma</h2>
+
+  <h3 class="subsec">3.4.1 Alur Prapemrosesan, Deteksi Wajah, dan Ekstraksi Embedding</h3>
+  <p class="indent">
+    Setiap citra yang masuk, baik pada pendaftaran maupun verifikasi, melewati
+    tahap prapemrosesan, deteksi wajah, dan ekstraksi
+    <span class="keyword">embedding</span> dengan langkah sebagai berikut:
+  </p>
+  <ol>
+    <li>Citra JPEG hasil tangkapan kamera didekode menjadi matriks citra BGR.</li>
+    <li>Citra dikonversi ke aras keabuan (grayscale).</li>
+    <li>Deteksi wajah dijalankan dengan Haar Cascade
+        (<span class="keyword">scaleFactor</span> = 1,1;
+        <span class="keyword">minNeighbors</span> = 3;
+        <span class="keyword">minSize</span> = 50&times;50 px). Parameter ini
+        lebih longgar dari konfigurasi awal agar wajah yang sedikit lebih jauh
+        dari kamera tetap dapat terdeteksi.</li>
+    <li>Apabila terdeteksi lebih dari satu wajah, dipilih wajah dengan luas
+        bounding box terbesar.</li>
+    <li>Wilayah wajah dipotong, diluruskan
+        (<span class="keyword">aligned</span>), dan diteruskan ke model
+        FaceNet.</li>
+    <li>FaceNet mengeluarkan vektor <span class="keyword">embedding</span>
+        128-dimensi yang sudah dinormalisasi-L2. Vektor inilah yang menjadi
+        representasi fitur untuk pendaftaran maupun pencocokan, bukan piksel
+        mentah.</li>
+  </ol>
+
+  <h3 class="subsec">3.4.2 Algoritma Pendaftaran Wajah (Enrollment)</h3>
+  <p class="indent">
+    Proses pendaftaran membangun basis data fitur wajah untuk setiap pengguna.
+    Alur algoritmanya ditunjukkan pada Gambar 3.2.
+  </p>
+  <div class="figure">
+    <div class="box-flow">
+      <div class="node start">Mulai &mdash; Pengguna menangkap 30 bingkai citra</div>
+      <div class="arrow">&#8595;</div>
+      <div class="node">Untuk tiap bingkai: dekode citra &amp; deteksi wajah (Haar Cascade)</div>
+      <div class="arrow">&#8595;</div>
+      <div class="node dec">Wajah terdeteksi? &nbsp; Jika ya &rarr; lanjut ke ekstraksi</div>
+      <div class="arrow">&#8595;</div>
+      <div class="node">Ekstrak embedding 128-dimensi dengan FaceNet (DeepFace)</div>
+      <div class="arrow">&#8595;</div>
+      <div class="node dec">Jumlah embedding valid &ge; 3 ?</div>
+      <div class="arrow">&#8595; ya</div>
+      <div class="node">Susun matriks (N &times; 128) &amp; simpan ke face_dataset/{user_id}.npy</div>
+      <div class="arrow">&#8595;</div>
+      <div class="node start">Status akun wajah &rarr; AKTIF</div>
+    </div>
+    <div class="caption">Gambar 3.2 Diagram Alir Proses Pendaftaran Wajah</div>
+  </div>
+  <p class="indent">
+    Apabila jumlah <span class="keyword">embedding</span> valid kurang dari
+    tiga, pendaftaran dinyatakan gagal dan pengguna diminta mengulang dengan
+    pencahayaan yang lebih baik. Pendaftaran ulang oleh pengguna yang sama akan
+    menimpa (<span class="keyword">overwrite</span>) berkas
+    <span class="keyword">embedding</span> sebelumnya, sehingga setiap
+    pengguna selalu memiliki tepat satu berkas data wajah terbaru.
+  </p>
+
+  <h3 class="subsec">3.4.3 Algoritma Verifikasi Wajah dan Pembayaran</h3>
+  <p class="indent">
+    Pada saat transaksi pembayaran, sistem memverifikasi wajah pengguna melalui
+    dua tahap berurutan: pemeriksaan anti-spoofing terlebih dahulu, kemudian
+    pencocokan identitas. Tahap pencocokan hanya dijalankan apabila wajah
+    dinyatakan nyata. Alur verifikasi ditunjukkan pada Gambar 3.3.
+  </p>
+  <div class="figure">
+    <div class="box-flow">
+      <div class="node start">Mulai &mdash; Citra wajah uji diterima</div>
+      <div class="arrow">&#8595;</div>
+      <div class="node">Deteksi anti-spoofing (MiniFASNet / DeepFace)</div>
+      <div class="arrow">&#8595;</div>
+      <div class="node dec">Wajah nyata (is_real)? &nbsp; Jika tidak &rarr; TOLAK (liveness_failed)</div>
+      <div class="arrow">&#8595; ya</div>
+      <div class="node">Deteksi wajah (Haar Cascade) &rarr; ekstrak embedding 128-d (FaceNet)</div>
+      <div class="arrow">&#8595;</div>
+      <div class="node">Hitung jarak kosinus ke seluruh embedding terdaftar</div>
+      <div class="arrow">&#8595;</div>
+      <div class="node">Ambil rata-rata 5 jarak kosinus terkecil (skor KNN)</div>
+      <div class="arrow">&#8595;</div>
+      <div class="node dec">Skor &lt; 0,40 ? &nbsp; ya &rarr; COCOK &nbsp;|&nbsp; tidak &rarr; TOLAK</div>
+      <div class="arrow">&#8595; cocok</div>
+      <div class="node start">Transaksi pembayaran diproses (saldo diperbarui)</div>
+    </div>
+    <div class="caption">Gambar 3.3 Diagram Alir Proses Verifikasi Wajah dan Pembayaran</div>
+  </div>
+  <p class="indent">
+    Keputusan pencocokan dirumuskan pada Persamaan (3.1), dengan
+    <em>d</em><sub>cos,(i)</sub> menyatakan jarak kosinus terurut menaik dan
+    <em>T</em> menyatakan nilai ambang:
+  </p>
+  <p class="formula">
+    skor = (1/5) &sum;<sub>i=1</sub><sup>5</sup> d<sub>cos,(i)</sub> ,&nbsp;&nbsp;
+    keputusan = COCOK jika skor &lt; T
+    <span class="num">(3.1)</span>
+  </p>
+  <p class="indent">
+    Nilai awal ambang <em>T</em> = 0,40 mengikuti rekomendasi resmi DeepFace
+    untuk model FaceNet. Nilai ini akan dikalibrasi ulang melalui eksperimen:
+    distribusi skor pada pasangan <em>genuine</em> dan
+    <em>impostor</em> dianalisis, lalu dipilih nilai <em>T</em> yang
+    menyeimbangkan kesalahan penerimaan dan penolakan. Hasil pengujian awal
+    pada lingkungan penelitian menunjukkan pemisahan yang jelas: skor
+    rata-rata wajah <em>genuine</em> berada pada kisaran 0,05&ndash;0,30
+    sedangkan <em>impostor</em> berada pada kisaran 0,50&ndash;0,80, sehingga
+    ambang 0,40 berada pada zona pemisah yang aman. Pengaruh variasi
+    <em>T</em> terhadap FAR dan FRR akan menjadi salah satu objek analisis
+    pada penelitian ini.
+  </p>
+
+  <h3 class="subsec">3.4.4 Skenario Pengujian</h3>
+  <p class="indent">
+    Pengujian dirancang untuk mengukur tiga aspek: (a) akurasi pencocokan
+    identitas, (b) efektivitas modul anti-spoofing, dan (c) kinerja waktu
+    komputasi. Skenario pengujian dirangkum pada Tabel 3.2.
+  </p>
+  <div class="caption-top">Tabel 3.2 Skenario Pengujian Sistem</div>
+  <table class="bordered">
+    <thead>
+      <tr>
+        <th style="width:8%">No.</th>
+        <th style="width:34%">Skenario</th>
+        <th style="width:58%">Tujuan Pengujian</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Verifikasi wajah asli pemilik akun</td>
+          <td>Mengukur tingkat keberhasilan penerimaan pengguna sah.</td></tr>
+      <tr><td>2</td><td>Verifikasi wajah pengguna lain</td>
+          <td>Mengukur kemampuan menolak impostor (FAR).</td></tr>
+      <tr><td>3</td><td>Serangan foto cetak</td>
+          <td>Mengukur efektivitas anti-spoofing terhadap print attack.</td></tr>
+      <tr><td>4</td><td>Serangan tayangan layar</td>
+          <td>Mengukur efektivitas anti-spoofing terhadap replay attack.</td></tr>
+      <tr><td>5</td><td>Variasi nilai ambang T</td>
+          <td>Menganalisis pengaruh ambang terhadap FAR dan FRR.</td></tr>
+      <tr><td>6</td><td>Variasi kondisi pencahayaan</td>
+          <td>Menguji ketahanan sistem terhadap perubahan lingkungan.</td></tr>
+      <tr><td>7</td><td>Pengukuran waktu respons</td>
+          <td>Mengukur waktu pendaftaran dan waktu verifikasi end-to-end.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="subsec">3.4.5 Metrik Evaluasi</h3>
+  <p class="indent">
+    Kinerja sistem dievaluasi menggunakan metrik standar pengenalan pola dan
+    sistem biometrik. Dengan TP (<span class="keyword">true positive</span>),
+    TN (<span class="keyword">true negative</span>), FP
+    (<span class="keyword">false positive</span>), dan FN
+    (<span class="keyword">false negative</span>), metrik dirumuskan sebagai
+    berikut:
+  </p>
+  <p class="formula">
+    Akurasi = (TP + TN) / (TP + TN + FP + FN)
+    <span class="num">(3.2)</span>
+  </p>
+  <p class="formula">
+    FAR = FP / (FP + TN)
+    <span class="num">(3.3)</span>
+  </p>
+  <p class="formula">
+    FRR = FN / (FN + TP)
+    <span class="num">(3.4)</span>
+  </p>
+  <p class="formula">
+    Precision = TP / (TP + FP) ,&nbsp;&nbsp;
+    Recall = TP / (TP + FN)
+    <span class="num">(3.5)</span>
+  </p>
+  <p class="indent">
+    <span class="keyword">False Acceptance Rate</span> (FAR) mengukur proporsi
+    pengguna tidak sah yang keliru diterima &mdash; metrik paling kritis pada
+    sistem pembayaran. <span class="keyword">False Rejection Rate</span> (FRR)
+    mengukur proporsi pengguna sah yang keliru ditolak &mdash; berkaitan dengan
+    kenyamanan pengguna. Selain itu diukur pula waktu komputasi rata-rata untuk
+    proses pendaftaran dan verifikasi guna menilai kelayakan sistem dalam
+    penggunaan nyata.
+  </p>
+
+  <h2 class="sec">3.5 Alat dan Bahan Penelitian</h2>
+  <p class="indent">
+    Perangkat keras dan perangkat lunak yang digunakan dalam penelitian
+    dirangkum pada Tabel 3.3.
+  </p>
+  <div class="caption-top">Tabel 3.3 Alat dan Bahan Penelitian</div>
+  <table class="bordered">
+    <thead>
+      <tr>
+        <th style="width:30%">Kategori</th>
+        <th style="width:70%">Spesifikasi / Keterangan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Perangkat keras</td>
+          <td>Komputer dengan kamera web, server (VM) untuk penyebaran layanan.</td></tr>
+      <tr><td>Sistem operasi</td>
+          <td>Lingkungan pengembangan dan server berbasis Linux.</td></tr>
+      <tr><td>Bahasa &amp; framework</td>
+          <td>Python (FastAPI), Java (Spring Boot), HTML/CSS/JavaScript.</td></tr>
+      <tr><td>Pustaka visi komputer</td>
+          <td>OpenCV, DeepFace, NumPy, SciPy.</td></tr>
+      <tr><td>Basis data</td>
+          <td>PostgreSQL.</td></tr>
+      <tr><td>Penyebaran</td>
+          <td>Docker dan Docker Compose.</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sec">3.6 Jadwal Penelitian</h2>
+  <p class="indent">
+    Rencana pelaksanaan penelitian dijadwalkan dalam kurun enam bulan
+    sebagaimana disajikan pada Tabel 3.4.
+  </p>
+  <div class="caption-top">Tabel 3.4 Jadwal Pelaksanaan Penelitian</div>
+  <table class="bordered">
+    <thead>
+      <tr>
+        <th style="width:40%">Kegiatan</th>
+        <th style="width:10%">B-1</th>
+        <th style="width:10%">B-2</th>
+        <th style="width:10%">B-3</th>
+        <th style="width:10%">B-4</th>
+        <th style="width:10%">B-5</th>
+        <th style="width:10%">B-6</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Studi literatur</td><td>&#10003;</td><td>&#10003;</td><td></td><td></td><td></td><td></td></tr>
+      <tr><td>Pengumpulan data</td><td></td><td>&#10003;</td><td>&#10003;</td><td></td><td></td><td></td></tr>
+      <tr><td>Perancangan sistem</td><td></td><td>&#10003;</td><td>&#10003;</td><td></td><td></td><td></td></tr>
+      <tr><td>Implementasi</td><td></td><td></td><td>&#10003;</td><td>&#10003;</td><td>&#10003;</td><td></td></tr>
+      <tr><td>Pengujian &amp; evaluasi</td><td></td><td></td><td></td><td>&#10003;</td><td>&#10003;</td><td></td></tr>
+      <tr><td>Analisis &amp; penyusunan laporan</td><td></td><td></td><td></td><td></td><td>&#10003;</td><td>&#10003;</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ===================== DAFTAR PUSTAKA ===================== -->
+<div class="bab">
+  <div class="bab-subtitle" style="margin-bottom:20pt">Daftar Pustaka</div>
+  <table style="font-size:12pt">
+    <tr><td style="vertical-align:top;padding:4pt 0;">
+      Cover, T., &amp; Hart, P. (1967). Nearest Neighbor Pattern Classification.
+      <em>IEEE Transactions on Information Theory</em>, 13(1), 21&ndash;27.
+    </td></tr>
+    <tr><td style="vertical-align:top;padding:4pt 0;">
+      Deng, J., Guo, J., Xue, N., &amp; Zafeiriou, S. (2019). ArcFace: Additive
+      Angular Margin Loss for Deep Face Recognition. <em>Proceedings of the
+      IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)</em>.
+    </td></tr>
+    <tr><td style="vertical-align:top;padding:4pt 0;">
+      Schroff, F., Kalenichenko, D., &amp; Philbin, J. (2015). FaceNet: A
+      Unified Embedding for Face Recognition and Clustering. <em>Proceedings of
+      the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)</em>.
+    </td></tr>
+    <tr><td style="vertical-align:top;padding:4pt 0;">
+      Taigman, Y., Yang, M., Ranzato, M., &amp; Wolf, L. (2014). DeepFace:
+      Closing the Gap to Human-Level Performance in Face Verification.
+      <em>Proceedings of the IEEE Conference on Computer Vision and Pattern
+      Recognition (CVPR)</em>.
+    </td></tr>
+    <tr><td style="vertical-align:top;padding:4pt 0;">
+      Viola, P., &amp; Jones, M. (2001). Rapid Object Detection Using a Boosted
+      Cascade of Simple Features. <em>Proceedings of the IEEE Conference on
+      Computer Vision and Pattern Recognition (CVPR)</em>.
+    </td></tr>
+    <tr><td style="vertical-align:top;padding:4pt 0;">
+      Bradski, G. (2000). The OpenCV Library. <em>Dr. Dobb's Journal of
+      Software Tools</em>.
+    </td></tr>
+    <tr><td style="vertical-align:top;padding:4pt 0;">
+      Serengil, S. I., &amp; Ozpinar, A. (2021). LightFace: A Hybrid Deep Face
+      Recognition Framework. <em>Innovations in Intelligent Systems and
+      Applications Conference (ASYU)</em>.
+    </td></tr>
+    <tr><td style="vertical-align:top;padding:4pt 0;">
+      Minivision Technology. (2020). <em>Silent-Face-Anti-Spoofing: A Lightweight
+      Face Anti-Spoofing Model (MiniFASNet)</em>.
+    </td></tr>
+  </table>
+</div>
+
+</body>
+</html>
